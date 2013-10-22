@@ -13,7 +13,7 @@ This is a school project at [ESGI](http://www.esgi.fr/).
 
 ## Installing
 
-> git clone https://github.com/mentalworks/rproxy
+> git clone https://github.com/tlenclos/Gamebook-XML
 
 ### Web app
 
