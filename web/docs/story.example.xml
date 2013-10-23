@@ -1,0 +1,28 @@
+<game title="Les gerriers XML" lang="fr">
+    <steps>
+        <step>
+            <id>1</id>
+            <description>Lorem ipsum blabla</description>
+            <actions>
+                <question>Que voulez-vous faire?</question>
+                <choices>
+                    <choice gotostep="2">Choix 1</choice>
+                    <choice gotostep="3">Choix 2</choice>
+                    <choice gotostep="4">Choix 3</choice>
+                </choices>
+            </actions>
+        </step>
+        <step>
+            <id>2</id>
+            <description>Lorem ipsum blabla</description>
+            <actions>
+                <question>Que voulez-vous faire?</question>
+                <choices>
+                    <choice gotostep="3">Choix 1</choice>
+                    <choice gotostep="4">Choix 2</choice>
+                    <choice gotostep="5">Choix 3</choice>
+                </choices>
+            </actions>
+        </step>
+    </steps>
+</game>
