@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Gamebook XML</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<script type="html/list">
+<div class="email-item email-item-selected pure-g" id="{id}">
+    <div class="pure-u-3-4 view">
+        <h4 class="email-subject">{title}</h4>
+        <p class="email-desc">
+            <a class="pure-button edit" href="#/edit/{id}">Edit</a>
+            <a class="pure-button delete">Delete</a>
+        </p>
+    </div>
+</div>
+</script>
+
+<script type="html/form">
+<div id="{id}" class="maincontent">
+    <form id="form-gamebook">
+        <p>
+            <label>Title</label>
+            <input name="title" type="text" value="{title}" />
+
+        </p>
+        <p>
+            <label>Description</label>
+            <textarea name="description" rows="10" cols="50">{description}</textarea>
+        </p>
+        <p>
+            <input class="pure-button save" type="submit" value="Save" />
+        </p>
+    </form>
+</div>
+</script>
+
+<div class="pure-g-r content" id="layout">
+    <div class="pure-u" id="nav">
+        <div class="nav-inner">
+            <h2>Gamebook XML</h2>
+            <a class="pure-button primary-button" href="#/create">Create</a>
+
+            <div class="pure-menu pure-menu-open">
+                <ul id="filters">
+                    <li>
+                        <a class="selected" href="#/list">All (<span id="gamebook-count"></span>)</a>
+                    </li>
+                    <li>
+                        <a href="#/list/active">Active</a>
+                    </li>
+                    <li>
+                        <a href="#/list/mine">By me</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="pure-u-1" id="main">
+
+    </div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/riot.js"></script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
