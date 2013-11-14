@@ -12,7 +12,7 @@ class Users
     // Get all users
     public static function getAll($file)
     {
-        return Users::xmlToUser($file);
+        return Users::xmlToUsers($file);
     }
 
     public static function getUserWithLogin($file, $login)
@@ -82,10 +82,7 @@ class Users
 
         foreach($usersXML as $userXML)
         {
-            $userClass = new User();
-            
-			//EDIT by GL : Shaheel il met le .id ici, mais pas dans la classe User =)
-			//$userClass->id = (int) $userXML->id;
+            $userClass = new User();            
             $userClass->login = $userXML->login->__toString(); 
             $userClass->password = $userXML->password->__toString(); 
             $userClass->firstname = $userXML->firstname->__toString(); 
