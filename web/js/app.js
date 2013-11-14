@@ -149,19 +149,22 @@ String.prototype.startsWith = function(needle)
             choicesContainer.append(choiceView);
         });
         
-        $.each(data.choices, function(index, choice) {
-            var choiceView = renderChoiceLayout({id: data.id, choiceid: choicesContainer.children().length, choice: choice, gotostep: index});
-            $('.delete-choice', choiceView).click(function() {
-                choiceView.remove();
+        if (data) {
+            $.each(data.choices, function(index, choice) {
+                var choiceView = renderChoiceLayout({id: data.id, choiceid: choicesContainer.children().length, choice: choice, gotostep: index});
+                choicesContainer.append(choiceView);
             });
-            choicesContainer.append(choiceView);
-        });
+        }
         
         return view;
     }
 
     function renderChoiceLayout(data) {
-        return $.el(templateChoice, data);
+        var view = $.el(templateChoice, data);
+        $('.delete-choice', view).click(function() {
+            view.remove();
+        });
+        return view;
     }
     
     function counts() {
