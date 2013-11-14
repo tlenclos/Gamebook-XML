@@ -1,10 +1,15 @@
 <?php
+
 namespace App\Models;
+
 use App\Models\Step;
 use App\Models\Story;
 
 class Stories {
-    public static function validateStory($file) {}
+
+    public static function validateStory($file) {
+        
+    }
 
     // Get all stories
     public static function getAll($dir) {
@@ -13,7 +18,7 @@ class Stories {
         if ($handle = opendir($dir)) {
             while (false !== ($entry = readdir($handle))) {
                 if ($entry != "." && $entry != "..") {
-                    $story = Stories::xmlToStory($dir.'/'.$entry);
+                    $story = Stories::xmlToStory($dir . '/' . $entry);
                     $result[] = $story;
                 }
             }
@@ -24,11 +29,11 @@ class Stories {
     }
 
     public static function get($dir, $id) {
-        return Stories::xmlToStory($dir.'/'.$id.'.xml');
+        return Stories::xmlToStory($dir . '/' . $id . '.xml');
     }
 
     public static function delete($dir, $id) {
-        return unlink($dir.'/'.$id.'.xml');
+        return unlink($dir . '/' . $id . '.xml');
     }
 
     public static function update($dir, $id, $data) {
@@ -37,9 +42,9 @@ class Stories {
         self::save($dir, $story);
         return $story;
     }
-    
+
     public static function save($dir, Story $story) {
-        $path = $dir.'/'.$story->id.'.xml';
+        $path = $dir . '/' . $story->id . '.xml';
         return file_put_contents($path, self::storyToXml($story));
     }
 
@@ -55,13 +60,13 @@ class Stories {
         $stepsXML = $xml->steps->children();
         $steps = array();
 
-        foreach($stepsXML as $step) {
+        foreach ($stepsXML as $step) {
             $stepClass = new Step();
             $stepClass->id = (int) $step->id;
-            $stepClass->description =  $step->description->__toString();
-            $stepClass->question =  $step->question->__toString();
+            $stepClass->description = $step->description->__toString();
+            $stepClass->question = $step->question->__toString();
 
-            foreach($step->actions->children() as $action) {
+            foreach ($step->actions->children() as $action) {
                 $gotostep = (array) $action->attributes();
                 if (isset($gotostep['@attributes']['gotostep'])) {
                     $gotostep = $gotostep['@attributes']['gotostep'];
@@ -82,14 +87,14 @@ class Stories {
         $xml->addAttribute('lang', $story->lang);
         $steps = $xml->addChild('steps');
 
-        foreach($story->steps as $storyStep) {
+        foreach ($story->steps as $storyStep) {
             $step = $steps->addChild('step');
             $step->addChild('id', $storyStep->id);
             $step->addChild('description', $storyStep->description);
             $step->addChild('question', $storyStep->question);
 
             $actions = $step->addChild('actions');
-            foreach($storyStep->choices as $stepChoiceId => $stepChoiceText) {
+            foreach ($storyStep->choices as $stepChoiceId => $stepChoiceText) {
                 $choice = $actions->addChild('choice', $stepChoiceText);
                 $choice->addAttribute('gotostep', $stepChoiceId);
             }
@@ -97,4 +102,5 @@ class Stories {
 
         return $xml->asXML();
     }
+
 }
