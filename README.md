@@ -21,6 +21,10 @@ Get composer and install dependencies :
 
 > curl -s http://getcomposer.org/installer | php
 
+then
+
+> php composer.phar install
+
 ### Java game
 
 TODO
