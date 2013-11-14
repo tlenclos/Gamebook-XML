@@ -10,10 +10,10 @@
 <body>
 
 <script type="html/list">
-<div class="email-item email-item-selected pure-g" id="{id}">
+<div class="item-list pure-g" id="{id}">
     <div class="pure-u-3-4 view">
-        <h4 class="email-subject">{title}</h4>
-        <p class="email-desc">
+        <h4>{title}</h4>
+        <p>
             <a class="pure-button edit" href="#/edit/{id}">Edit</a>
             <a class="pure-button delete">Delete</a>
         </p>
@@ -26,12 +26,13 @@
     <form id="form-gamebook">
         <p>
             <label>Title</label>
-            <input name="title" type="text" value="{title}" />
-
+            <input name="title" type="text" size="20" value="{title}" />
+            <label>Language</label>
+            <input name="lang" type="text" size="1" value="{lang}" />
         </p>
+        <div id="steps"></div>
         <p>
-            <label>Description</label>
-            <textarea name="description" rows="10" cols="50">{description}</textarea>
+            <a id="add-step" class="pure-button primary-button">Add step</a>
         </p>
         <p>
             <input class="pure-button save" type="submit" value="Save" />
@@ -40,19 +41,33 @@
 </div>
 </script>
 
+<script type="html/form-step">
+    <div class="step">
+        <h3>Step</h3>
+        <p>
+            <label>Description</label>
+            <textarea name="description">{description}</textarea>
+        </p
+        <p>
+            <label>Question</label>
+            <input name="question" type="text" value="{question}" />
+        </p>
+        <p>
+            <label><strong>TODO</strong>Choix</label>
+        </p>
+    </div>
+</script>
+
 <div class="pure-g-r content" id="layout">
     <div class="pure-u" id="nav">
         <div class="nav-inner">
-            <h2>Gamebook XML</h2>
+            <h2><a href="#">Gamebook XML</a></h2>
             <a class="pure-button primary-button" href="#/create">Create</a>
 
             <div class="pure-menu pure-menu-open">
                 <ul id="filters">
                     <li>
                         <a class="selected" href="#/list">All (<span id="gamebook-count"></span>)</a>
-                    </li>
-                    <li>
-                        <a href="#/list/active">Active</a>
                     </li>
                     <li>
                         <a href="#/list/mine">By me</a>
@@ -68,6 +83,7 @@
 </div>
 
 <script src="js/jquery.min.js"></script>
+<script src="js/jquery.rest.min.js"></script>
 <script src="js/riot.js"></script>
 <script src="js/api.js"></script>
 <script src="js/app.js"></script>

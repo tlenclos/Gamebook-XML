@@ -15,15 +15,11 @@ define('DIR_STORIES', DIR_DATA.'/stories');
 define('DIR_USER', DIR_DATA.'/users');
 
 require 'vendor/autoload.php';
-require 'models/stories.php'; // TODO autoload
+require 'app/models/stories.php'; // TODO autoload
 
 // App
 $app = new \Slim\Slim();
 $app->response->headers->set('Content-Type', 'application/json');
-
-$app->get('/', function () {
-    echo 'Home';
-});
 
 $app->get('/login', function () {
     echo 'Login';
@@ -33,32 +29,59 @@ $app->get('/register', function () {
     echo 'Register';
 });
 
-$app->get('/stories', function () {
+$app->get('/stories/', function () {
     try {
-        $response = array(
-            'success' => true,
-            'stories' => Stories::getAll(DIR_STORIES)
-        );
+        $response = Stories::getAll(DIR_STORIES);
     } catch (Exception $e) {
         $response = array(
             'success' => false,
-            'error' => $e
+            'error' => $e->getMessage()
         );
     }
 
     echo json_encode($response);
 });
 
-$app->get('/stories/:id', function () {
-    echo 'Single story';
+$app->get('/stories/:id/', function ($id) {
+    try {
+        $response = Stories::get(DIR_STORIES, $id);
+    } catch (Exception $e) {
+        $response = array(
+            'success' => false,
+            'error' => $e->getMessage()
+        );
+    }
+
+    echo json_encode($response);
 });
 
-$app->post('/stories', function ($data) {
+$app->delete('/stories/:id/', function ($id) {
+    try {
+        $response = Stories::delete(DIR_STORIES, $id);
+    } catch (Exception $e) {
+        $response = array(
+            'success' => false,
+            'error' => $e->getMessage()
+        );
+    }
+
+    echo json_encode($response);
+});
+
+// TODO
+$app->post('/stories/', function () use($app) {
     // TODO Create story object, map datas with form, validate
-    $id = uniqid();
-    $response = array(
-        'success' => false
-    );
+    $data = $app->request->post();
+    try {
+        $story = new Story;
+        $story->mapToArray($data);
+        var_dump(Stories::save($story)); exit;
+    } catch (Exception $e) {
+        $response = array(
+            'success' => false,
+            'error' => $e->getMessage()
+        );
+    }
 
     echo json_encode($response);
 });

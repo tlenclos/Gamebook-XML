@@ -1,9 +1,9 @@
-<game title="Les gerriers XML" lang="fr">
+<game title="Les guerriers XML" lang="fr">
     <steps>
         <step>
             <id>3</id>
-            <description>Lorem ipsum blabla</description>
-            <question>Que voulez-vous faire?</question>
+            <description>Lorem ipsum blabla1</description>
+            <question>Que voulez-vous faire?1</question>
             <actions>
                 <choice gotostep="3">Choix 1</choice>
                 <choice gotostep="4">Choix 2</choice>
@@ -12,8 +12,8 @@
         </step>
         <step>
             <id>2</id>
-            <description>Lorem ipsum blabla</description>
-            <question>Que voulez-vous faire?</question>
+            <description>Lorem ipsum blabla2</description>
+            <question>Que voulez-vous faire?2</question>
             <actions>
                 <choice gotostep="3">Choix 1</choice>
                 <choice gotostep="4">Choix 2</choice>

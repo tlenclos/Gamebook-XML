@@ -1,66 +1,47 @@
-/* Fake database, will be replaced by real API */
-function DB(key) {
-   var store = window.localStorage;
-
-   return {
-      get: function() {
-         return JSON.parse(store[key] || '{}');
-      },
-
-      put: function(data) {
-         store[key] = JSON.stringify(data);
-      }
-   };
-}
-
 /* The model */
 function Gamebook(db) {
 
-   db = db || DB("gamebook");
+    var self = $.observable(this);
 
-   var self = $.observable(this),
-      items = db.get();
+    self.local = [];
 
-   self.add = function(data) {
-      if (!data.id) {
-          data.id = "_" + ("" + Math.random()).slice(2);
-      }
-      
-      items[data.id] = data;
-      self.emit("add", data);
-   };
+    // TODO
+    self.add = function(data) {
+        if (!data.id) {
+            data.id = "_" + ("" + Math.random()).slice(2);
+        }
 
-   self.edit = function(item) {
-      items[item.id] = item;
-      self.emit("edit", item);
-   };
+        db.create(data).done(function(data) {
+            callback(data);
+            self.emit("add", data);
+        });
+    };
 
-   self.remove = function(filter) {
-      var els = self.items(filter);
-      $.each(els, function() {
-         delete items[this.id];
-      });
-      self.emit("remove", els);
-   };
+    // TODO
+    self.edit = function(item) {
+        items[item.id] = item;
+        self.emit("edit", item);
+    };
 
-   self.toggle = function(id) {
-      var item = items[id];
-      item.done = !item.done;
-      self.emit("toggle", item);
-   };
+    self.remove = function(id, callback) {
+        db.destroy(id).done(function(data) {
+            callback(data);
+            self.emit("remove", data);
+        });
+    };
 
-   // @param filter: <empty>, id, "active", "completed"
-   self.items = function(filter) {
-      var ret = [];
-      $.each(items, function(id, item) {
-         if (!filter || filter === id || filter === (item.done ? "completed" : "active")) ret.push(item);
-      });
-      return ret;
-   };
+    self.get = function(id, callback) {
+        db.read(id).done(function(data) {
+            callback(data);
+        });
+    };
 
-   // sync database
-   self.on("add remove toggle edit", function() {
-      db.put(items);
-   });
+    self.items = function(callback) {
+        db.read().done(function(data) {
+            self.local = data;
 
+            // TODO called twice at start, why?
+            callback(data);
+        });
+    };
 }

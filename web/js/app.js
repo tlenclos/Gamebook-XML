@@ -7,19 +7,20 @@ String.prototype.startsWith = function(needle)
 
 (function() {
     'use strict';
-    /*
-     A Model instance. Exposed to global space so it can be used
-     on the browser's console. Try for example:
 
-     gamebook.add("My gamebook story");
-     */
-    window.gamebook = new Gamebook();
+    // Init
+    window.client = new $.RestClient('/Gamebook-XML/web/api.php/'); // TODO change Url
+    window.client.add('stories');
+
+    window.gamebook = new Gamebook(client.stories);
 
     // HTML for a single gamebook item
     var templateList = $("[type='html/list']").html(),
-            templateForm = $("[type='html/form']").html(),
-            root = $("#main"),
-            nav = $("#filters a");
+        templateForm = $("[type='html/form']").html(),
+        templateStep = $("[type='html/form-step']").html(),
+        root = $("#main"),
+        nav = $("#filters a")
+    ;
 
     /* Listen to model events */
     gamebook
@@ -44,24 +45,23 @@ String.prototype.startsWith = function(needle)
         var url = hash.slice(2);
 
         if (url.startsWith('list') || url === '') {
-            url = url.slice('5');
-            list(url);
+            list();
         } else if (url.startsWith('create')) {
             edit(null);
         } else if (url.startsWith('edit')) {
             var id = url.slice(5);
-            edit(gamebook.items(id)[0])
+            gamebook.get(id, function(story) {
+                edit(story);
+            });
         }
-
-        // Update the counts
-        counts();
     });
 
     // private functions
     // Update view after adding a model
-    function add(item) {
+    function add(index, item) {
         if (this.id)
             item = this;
+
         var el = $.el(templateList, item).appendTo(root);
 
         // Edit control
@@ -71,44 +71,67 @@ String.prototype.startsWith = function(needle)
 
         // Delete control
         $(".delete", el).click(function() {
-            console.log(item);
-            gamebook.remove(item.id);
-            list();
+            gamebook.remove(item.id, function(data) {
+                list();
+            });
         });
     };
 
     function edit(item) {
+        var
+            view,
+            stepsLayout
+        ;
         root.empty();
-        var view;
-
+        
         if (item) {
             view = $.el(templateForm, item);
+            stepsLayout = $('#steps', view);
+            
+            $.each(item.steps, function(index, step) {
+                var subformStep = $.el(templateStep, step);
+                stepsLayout.append(subformStep);
+            });
         } else {
             view = $.el(templateForm);
+            stepsLayout = $('#steps', view);
+            var subformStep = $.el(templateStep);
+            stepsLayout.append(subformStep);
         }
 
+        // Add step
+        $('#add-step', view).click(function() {
+            stepsLayout.append($.el(templateStep));
+        });
+        
+        // Save form
         $('#form-gamebook', view).submit (function(event) {
             var data = formToObject($('#form-gamebook').serializeArray());
             $.extend(data, item);
-            console.log(data);
-            gamebook.add(data);
-            list();
+            gamebook.add(data, function(response) {
+                list();
+            });
+
             event.preventDefault();
         });
-
+        
         view.appendTo(root);
+        root.append(view);
     }
 
-    function list(filter) {
+    function list() {
+        // TODO sometime this method is called twice, why?
         // clear list and add new ones
-        root.empty() && $.each(gamebook.items(filter), add);
-
-        // selected class
-        nav.removeClass("selected").filter("[href='" + filter + "']").addClass("selected");
+        gamebook.items(function(stories) {
+            root.empty();
+            $.each(stories, add);
+            // Update the counts
+            counts();
+        });
     }
 
     function counts() {
-        var total = gamebook.items().length;
+        var total = gamebook.local.length;
         $("#gamebook-count").html("<strong>" + total + "</strong>");
     }
 
