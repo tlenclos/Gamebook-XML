@@ -94,8 +94,9 @@ class Users
             $userClass->login = $userXML->login->__toString(); 
             $userClass->password = $userXML->password->__toString(); 
             $userClass->firstname = $userXML->firstname->__toString(); 
-            $userClass->lastname = $userXML->lastname->__toString();             
-
+            $userClass->lastname = $userXML->lastname->__toString();   
+            $userClass->stories = $userXML->stories->children();
+            
             $users[] = $userClass;
         }
 
@@ -113,6 +114,12 @@ class Users
             $userXML->addChild('password',$user->password);
             $userXML->addChild('firstname',$user->firstname);
             $userXML->addChild('lastname',$user->lastname);
+            $storiesXML = $userXML->addChild("stories");
+            
+            foreach($user->stories as $storyId)
+            {
+                $storiesXML->addChild("story", $storyId);
+            }
         }
 
         return $xml->asXML();
