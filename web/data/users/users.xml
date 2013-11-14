@@ -1,10 +1,2 @@
-<!DOCTYPE users SYSTEM "user.example.dtd">
-<users>
-    <user>
-        <login>fakeuser@gmail;com</login>
-        <password>2398403UFDJEAIO</password>
-        <firstname>Firstname</firstname>
-        <lastname>Lastname</lastname>
-        <stories></stories>
-    </user>
-</users>
+<?xml version="1.0"?>
+<users><user><login>fakeuser@gmail;com</login><password>2398403UFDJEAIO</password><firstname>Firstname</firstname><lastname>Lastname</lastname><stories/></user></users>

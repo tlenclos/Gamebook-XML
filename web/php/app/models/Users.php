@@ -78,6 +78,8 @@ class Users
         }
         
         self::save($file,$result);
+        
+        return (count($result) != count($users));
     }
 
     public static function update($file, $login, $data)
