@@ -10,30 +10,14 @@ class Users
     }
 
     // Get all users
-    public static function getAll($dir)
+    public static function getAll($file)
     {
-        $result = array();
-
-        if ($handle = opendir($dir))
-        {
-            while (false !== ($entry = readdir($handle)))
-            {
-                
-                if (strpos($entry,'users') !== false)
-                {
-                    $result = Users::xmlToUser($dir.'/'.$entry);
-                    return $result;
-                }
-            }
-            closedir($handle);
-        }
-
-        return $result;
+        return Users::xmlToUser($file);
     }
 
-    public static function getUserWithLogin($dir, $login)
+    public static function getUserWithLogin($file, $login)
     {
-        $users = self::getAll($dir);
+        $users = self::getAll($file);
         
         foreach ($users as $user)
         {
@@ -43,10 +27,20 @@ class Users
         
         return false;
     }
-
-    public static function delete($dir, $login)
+	
+	public static function getUserWithLoginAndPassword($file, $login, $password)
     {
-        $users = self::getAll($dir);
+        $user = Users::getUserWithLogin($file,$login);
+        
+		if (!$user || $user->password != $password)
+			return false;
+		
+        return $user;
+    }
+
+    public static function delete($file, $login)
+    {
+        $users = self::getAll($file);
         $result = array();
         foreach ($users as $user)
         {
@@ -56,18 +50,18 @@ class Users
             }
         }
         
-        self::save($dir,$result);
+        self::save($file,$result);
     }
 
-    public static function update($dir, $login, $data)
+    public static function update($file, $login, $data)
     {
-        $users = self::getAll($dir);
+        $users = self::getAll($file);
         foreach($users as $user)
         {
             if($user->login == $login)
             {
                 $user->mapToArray($data);
-                self::save($dir,$users);
+                self::save($file,$users);
                 return $user;
             }
         }
@@ -75,22 +69,23 @@ class Users
         return false;
     }
     
-    public static function save($dir,array $users)
+    public static function save($file,array $users)
     {
-        $path = $dir.'/users.xml';
-        return file_put_contents($path, self::usersToXml($users));
+        return file_put_contents($file, self::usersToXml($users));
     }
 
     public static function xmlToUsers($file)
     {
         $xml = simplexml_load_file($file);
-        $usersXML = $xml->users->children();
+        $usersXML = $xml->children();
         $users = array();
 
         foreach($usersXML as $userXML)
         {
             $userClass = new User();
-            $userClass->id = (int) $userXML->id;
+            
+			//EDIT by GL : Shaheel il met le .id ici, mais pas dans la classe User =)
+			//$userClass->id = (int) $userXML->id;
             $userClass->login = $userXML->login->__toString(); 
             $userClass->password = $userXML->password->__toString(); 
             $userClass->firstname = $userXML->firstname->__toString(); 
@@ -105,7 +100,7 @@ class Users
 
     public static function usersToXml(array $users)
     {
-        $xml = new \SimpleXMLElement("<users></users>");
+        $xml = new SimpleXMLElement("<users></users>");
         
         foreach($users as $user)
         {
