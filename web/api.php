@@ -12,22 +12,68 @@ ini_set('display_errors', 1);
 
 define('DIR_DATA', 'data');
 define('DIR_STORIES', DIR_DATA.'/stories');
-define('DIR_USER', DIR_DATA.'/users');
+define('FILE_USER', DIR_DATA.'/users/users.xml');
  
 require 'vendor/autoload.php';
 use App\Models\Stories;
 use App\Models\Story;
+use App\Models\Users;
+use App\Models\User;
 
 // App
 $app = new \Slim\Slim();
 $app->response->headers->set('Content-Type', 'application/json');
 
-$app->get('/login', function () {
-    echo 'Login';
+$app->get('/users/', function () {    
+    try {
+        $response = Users::getAll(FILE_USER);
+    } catch (Exception $e) {
+        $response = array(
+            'success' => false,
+            'error' => $e->getMessage()
+        );
+    }
+
+    echo json_encode($response);
 });
 
-$app->get('/register', function () {
-    echo 'Register';
+$app->get('/login/:login/:password/', function ($login,$password) {    
+    try {
+        $response = Users::getUserWithLoginAndPassword(FILE_USER,$login,$password);
+    } catch (Exception $e) {
+        $response = array(
+            'success' => false,
+            'error' => $e->getMessage()
+        );
+    }
+
+    echo json_encode($response);
+});
+
+$app->get('/register/:login/:password/:firstname/:lastname/', function ($login,$password,$firsname,$lastname) {
+    try {
+        $response = Users::add(FILE_USER,$login,$password,$firsname,$lastname);
+    } catch (Exception $e) {
+        $response = array(
+            'success' => false,
+            'error' => $e->getMessage()
+        );
+    }
+
+    echo json_encode($response);
+});
+
+$app->get('/delete/:login/', function ($login) {
+    try {
+        $response = Users::delete(FILE_USER,$login);
+    } catch (Exception $e) {
+        $response = array(
+            'success' => false,
+            'error' => $e->getMessage()
+        );
+    }
+
+    echo json_encode($response);
 });
 
 $app->get('/stories/', function () {

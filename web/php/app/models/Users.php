@@ -12,7 +12,7 @@ class Users
     // Get all users
     public static function getAll($file)
     {
-        return Users::xmlToUser($file);
+        return Users::xmlToUsers($file);
     }
 
     public static function getUserWithLogin($file, $login)
@@ -37,6 +37,33 @@ class Users
 		
         return $user;
     }
+	
+	public static function add($file, $login,$password,$firstname,$lastname)
+    {
+        $users = self::getAll($file);
+        
+        foreach ($users as $user)
+        {
+            if($user->login == $login)
+            {
+                //login already used
+				return false;
+            }
+        }
+		
+		$newUser = new User();
+		
+		$newUser->login = $login;
+		$newUser->password = $password;
+		$newUser->firstname = $firstname;
+		$newUser->lastname = $lastname;
+		
+		$users[] = $newUser;
+        
+        self::save($file,$users);
+		
+		return $newUser;
+    }
 
     public static function delete($file, $login)
     {
@@ -51,6 +78,8 @@ class Users
         }
         
         self::save($file,$result);
+        
+        return (count($result) != count($users));
     }
 
     public static function update($file, $login, $data)
@@ -82,10 +111,7 @@ class Users
 
         foreach($usersXML as $userXML)
         {
-            $userClass = new User();
-            
-			//EDIT by GL : Shaheel il met le .id ici, mais pas dans la classe User =)
-			//$userClass->id = (int) $userXML->id;
+            $userClass = new User();            
             $userClass->login = $userXML->login->__toString(); 
             $userClass->password = $userXML->password->__toString(); 
             $userClass->firstname = $userXML->firstname->__toString(); 
@@ -100,7 +126,7 @@ class Users
 
     public static function usersToXml(array $users)
     {
-        $xml = new SimpleXMLElement("<users></users>");
+        $xml = new \SimpleXMLElement("<users></users>");
         
         foreach($users as $user)
         {
