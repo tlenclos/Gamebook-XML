@@ -2,7 +2,6 @@
 namespace App\Models;
 use App\Models\Step;
 use App\Models\Story;
-use App\Utils\Str;
 
 class Stories {
     public static function validateStory($file) {}
