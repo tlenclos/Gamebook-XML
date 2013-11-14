@@ -124,7 +124,7 @@ class Users
 
     public static function usersToXml(array $users)
     {
-        $xml = new SimpleXMLElement("<users></users>");
+        $xml = new \SimpleXMLElement("<users></users>");
         
         foreach($users as $user)
         {
