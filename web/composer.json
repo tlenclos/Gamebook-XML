@@ -1,4 +1,7 @@
 {
+    "autoload": {
+        "psr-0": {"App\\": "php/"}
+    },
     "require": {
         "slim/slim": "2.*"
     }

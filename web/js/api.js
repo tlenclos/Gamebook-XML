@@ -5,28 +5,25 @@ function Gamebook(db) {
 
     self.local = [];
 
-    // TODO
     self.add = function(data) {
         if (!data.id) {
             data.id = "_" + ("" + Math.random()).slice(2);
         }
 
         db.create(data).done(function(data) {
-            callback(data);
             self.emit("add", data);
         });
     };
 
-    // TODO
-    self.edit = function(item) {
-        items[item.id] = item;
-        self.emit("edit", item);
+    self.edit = function(data) {
+        db.update(data.id, data).done(function(data) {
+            self.emit("edit", data);
+        });
     };
 
-    self.remove = function(id, callback) {
+    self.remove = function(id) {
         db.destroy(id).done(function(data) {
-            callback(data);
-            self.emit("remove", data);
+            self.emit("remove", id);
         });
     };
 

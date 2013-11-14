@@ -25,13 +25,12 @@ String.prototype.startsWith = function(needle)
     /* Listen to model events */
     gamebook
     .on("add", add)
-    .on("remove", function(items) {
-        $.each(items, function() {
-            $("#" + this.id).remove();
-        });
+    .on("remove", function(id) {
+        $("#" + id).remove();
     })
     .on("edit", function(item) {
         var el = $("#" + item.id);
+        alert('Story saved');
     })
     // counts
     .on("add remove", counts);
@@ -71,9 +70,7 @@ String.prototype.startsWith = function(needle)
 
         // Delete control
         $(".delete", el).click(function() {
-            gamebook.remove(item.id, function(data) {
-                list();
-            });
+            gamebook.remove(item.id);
         });
     };
 
@@ -107,10 +104,14 @@ String.prototype.startsWith = function(needle)
         // Save form
         $('#form-gamebook', view).submit (function(event) {
             var data = formToObject($('#form-gamebook').serializeArray());
-            $.extend(data, item);
-            gamebook.add(data, function(response) {
-                list();
-            });
+            
+            if (item) {
+                gamebook.edit(data);
+            } else {
+                gamebook.add(data, function(response) {
+                    list();
+                });
+            }
 
             event.preventDefault();
         });

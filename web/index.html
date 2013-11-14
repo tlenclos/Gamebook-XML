@@ -25,6 +25,7 @@
 <div id="{id}" class="maincontent">
     <form id="form-gamebook">
         <p>
+            <input name="id" type="hidden" value="{id}" />
             <label>Title</label>
             <input name="title" type="text" size="20" value="{title}" />
             <label>Language</label>
@@ -62,8 +63,6 @@
     <div class="pure-u" id="nav">
         <div class="nav-inner">
             <h2><a href="#">Gamebook XML</a></h2>
-            <a class="pure-button primary-button" href="#/create">Create</a>
-
             <div class="pure-menu pure-menu-open">
                 <ul id="filters">
                     <li>
@@ -74,6 +73,7 @@
                     </li>
                 </ul>
             </div>
+            <a class="pure-button primary-button" href="#/create">Create</a>
         </div>
     </div>
 

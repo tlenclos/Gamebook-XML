@@ -1,42 +1,10 @@
 <?php
-class Step {
-    public $id = 0;
-    public $description = "";
-    public $question = "";
-    public $choices = array();
-}
-
-class Story {
-    public $id = "";
-    public $title = "";
-    public $lang = "en";
-    public $steps = array();
-
-    public function mapToArray(array $data) {
-        foreach($data as $k=>$v) {
-            if (property_exists(get_class($this), $k)) {
-                $this->$k = $v;
-            }
-        }
-
-        $steps = $data['steps'];
-        if (!empty($steps) && is_array($steps)) {
-            $this->steps = array();
-
-            foreach($steps as $stepData) {
-                $step = new Step;
-                !empty($stepData['id']) && $step->id = $stepData['id'];
-                !empty($stepData['description']) && $step->description = $stepData['description'];
-                !empty($stepData['question']) && $step->question = $stepData['question'];
-                !empty($stepData['choices']) && $step->choices = $stepData['choices'];
-                $this->steps[] = $step;
-            }
-        }
-    }
-}
+namespace App\Models;
+use App\Models\Step;
+use App\Models\Story;
+use App\Utils\Str;
 
 class Stories {
-
     public static function validateStory($file) {}
 
     // Get all stories
@@ -64,9 +32,16 @@ class Stories {
         return unlink($dir.'/'.$id.'.xml');
     }
 
+    public static function update($dir, $id, $data) {
+        $story = self::get($dir, $id);
+        $story->mapToArray($data);
+        self::save($dir, $story);
+        return $story;
+    }
+    
     public static function save($dir, Story $story) {
-        $xmlString = self::storyToXml($story);
-        return file_put_contents($dir.'/test.xml', $xmlString);
+        $path = $dir.'/'.$story->id.'.xml';
+        return file_put_contents($path, self::storyToXml($story));
     }
 
     public static function xmlToStory($file) {
@@ -89,8 +64,10 @@ class Stories {
 
             foreach($step->actions->children() as $action) {
                 $gotostep = (array) $action->attributes();
-                $gotostep = $gotostep['@attributes']['gotostep'];
-                $stepClass->choices[$gotostep] = $action->__toString();
+                if (isset($gotostep['@attributes']['gotostep'])) {
+                    $gotostep = $gotostep['@attributes']['gotostep'];
+                    $stepClass->choices[$gotostep] = $action->__toString();
+                }
             }
 
             $steps[] = $stepClass;
@@ -101,7 +78,7 @@ class Stories {
     }
 
     public static function storyToXml(Story $story) {
-        $xml = new SimpleXMLElement("<game></game>");
+        $xml = new \SimpleXMLElement("<game></game>");
         $xml->addAttribute('title', $story->title);
         $xml->addAttribute('lang', $story->lang);
         $steps = $xml->addChild('steps');

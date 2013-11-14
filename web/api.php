@@ -13,9 +13,10 @@ ini_set('display_errors', 1);
 define('DIR_DATA', 'data');
 define('DIR_STORIES', DIR_DATA.'/stories');
 define('DIR_USER', DIR_DATA.'/users');
-
+ 
 require 'vendor/autoload.php';
-require 'app/models/stories.php'; // TODO autoload
+use App\Models\Stories;
+use App\Models\Story;
 
 // App
 $app = new \Slim\Slim();
@@ -68,14 +69,29 @@ $app->delete('/stories/:id/', function ($id) {
     echo json_encode($response);
 });
 
-// TODO
 $app->post('/stories/', function () use($app) {
-    // TODO Create story object, map datas with form, validate
     $data = $app->request->post();
+    
     try {
         $story = new Story;
         $story->mapToArray($data);
-        var_dump(Stories::save($story)); exit;
+        Stories::save(DIR_STORIES, $story);
+        $response = $story;
+    } catch (Exception $e) {
+        $response = array(
+            'success' => false,
+            'error' => $e->getMessage()
+        );
+    }
+
+    echo json_encode($response);
+});
+
+$app->put('/stories/:id/', function ($id) use($app) {
+    $data = $app->request()->put();
+    
+    try {
+        $response = Stories::update(DIR_STORIES, $id, $data);
     } catch (Exception $e) {
         $response = array(
             'success' => false,
