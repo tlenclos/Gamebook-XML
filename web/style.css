@@ -92,3 +92,7 @@ a {
 .delete-step {
     float: right;
 }
+
+input, textarea {
+    padding: 2px;
+}

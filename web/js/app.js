@@ -25,13 +25,17 @@ String.prototype.startsWith = function(needle)
 
     /* Listen to model events */
     gamebook
-    .on("add", add)
+    .on("add", function() {
+        $.notifyBar({html: 'Story saved', position: 'bottom'});
+        list();
+    })
     .on("remove", function(id) {
+        $.notifyBar({html: 'Story deleted', position: 'bottom'});
         $("#" + id).remove();
     })
     .on("edit", function(item) {
         var el = $("#" + item.id);
-        alert('Story saved');
+        $.notifyBar({html: 'Story saved', position: 'bottom'});
     })
     // counts
     .on("add remove", counts);
@@ -109,15 +113,13 @@ String.prototype.startsWith = function(needle)
         // Save form
         $('#form-gamebook', view).submit (function(event) {
             var data = formToObject($('#form-gamebook').serializeArray());
-            
+
             if (item) {
                 gamebook.edit(data);
             } else {
-                gamebook.add(data, function(response) {
-                    list();
-                });
+                gamebook.add(data);
             }
-
+            
             event.preventDefault();
         });
         
@@ -137,6 +139,7 @@ String.prototype.startsWith = function(needle)
     }
     
     function renderStepLayout(data) {
+        var data = data ? data : {id: 0, description: '', question: ''};
         var view = $.el(templateStep, data);
         var choicesContainer = $('.choices', view);
         
@@ -145,11 +148,11 @@ String.prototype.startsWith = function(needle)
         });
         
         $('.add-choice', view).click(function() {
-            var choiceView = renderChoiceLayout({id: data.id, choiceid: choicesContainer.children().length, choice: '', gotostep: ''});
+            var choiceView = renderChoiceLayout({id: data ? data.id : 0, choiceid: choicesContainer.children().length, choice: '', gotostep: ''});
             choicesContainer.append(choiceView);
         });
         
-        if (data) {
+        if (data && data.choices) {
             $.each(data.choices, function(index, choice) {
                 var choiceView = renderChoiceLayout({id: data.id, choiceid: choicesContainer.children().length, choice: choice, gotostep: index});
                 choicesContainer.append(choiceView);

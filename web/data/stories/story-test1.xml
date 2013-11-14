@@ -1,0 +1,24 @@
+<game title="Les guerriers XML 2" lang="fr">
+    <steps>
+        <step>
+            <id>3</id>
+            <description>Lorem ipsum blabla</description>
+            <question>Que voulez-vous faire?</question>
+            <actions>
+                <choice gotostep="3">Choix 1</choice>
+                <choice gotostep="4">Choix 2</choice>
+                <choice gotostep="5">Choix 3</choice>
+            </actions>
+        </step>
+        <step>
+            <id>2</id>
+            <description>Lorem ipsum blabla</description>
+            <question>Que voulez-vous faire?</question>
+            <actions>
+                <choice gotostep="3">Choix 1</choice>
+                <choice gotostep="4">Choix 2</choice>
+                <choice gotostep="5">Choix 3</choice>
+            </actions>
+        </step>
+    </steps>
+</game>
