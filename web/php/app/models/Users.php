@@ -37,6 +37,33 @@ class Users
 		
         return $user;
     }
+	
+	public static function add($file, $login,$password,$firstname,$lastname)
+    {
+        $users = self::getAll($file);
+        
+        foreach ($users as $user)
+        {
+            if($user->login == $login)
+            {
+                //login already used
+				return false;
+            }
+        }
+		
+		$newUser = new User();
+		
+		$newUser->login = $login;
+		$newUser->password = $password;
+		$newUser->firstname = $firstname;
+		$newUser->lastname = $lastname;
+		
+		$users[] = $newUser;
+        
+        self::save($file,$users);
+		
+		return $newUser;
+    }
 
     public static function delete($file, $login)
     {
