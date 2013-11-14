@@ -88,3 +88,7 @@ a {
     border: 1px solid grey;
     padding: 5px;
 }
+
+.delete-step {
+    float: right;
+}

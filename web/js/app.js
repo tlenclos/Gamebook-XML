@@ -18,6 +18,7 @@ String.prototype.startsWith = function(needle)
     var templateList = $("[type='html/list']").html(),
         templateForm = $("[type='html/form']").html(),
         templateStep = $("[type='html/form-step']").html(),
+        templateChoice = $("[type='html/form-choice']").html(),
         root = $("#main"),
         nav = $("#filters a")
     ;
@@ -56,7 +57,6 @@ String.prototype.startsWith = function(needle)
     });
 
     // private functions
-    // Update view after adding a model
     function add(index, item) {
         if (this.id)
             item = this;
@@ -86,19 +86,24 @@ String.prototype.startsWith = function(needle)
             stepsLayout = $('#steps', view);
             
             $.each(item.steps, function(index, step) {
-                var subformStep = $.el(templateStep, step);
-                stepsLayout.append(subformStep);
+                stepsLayout.append(renderStepLayout(step));
             });
         } else {
             view = $.el(templateForm);
             stepsLayout = $('#steps', view);
-            var subformStep = $.el(templateStep);
-            stepsLayout.append(subformStep);
+            stepsLayout.append(renderStepLayout());
         }
 
         // Add step
         $('#add-step', view).click(function() {
-            stepsLayout.append($.el(templateStep));
+            var stepData = {
+                id: stepsLayout.children().length,
+                description: '',
+                question: '',
+                choices: []
+            };
+            
+            stepsLayout.append(renderStepLayout(stepData));
         });
         
         // Save form
@@ -130,7 +135,35 @@ String.prototype.startsWith = function(needle)
             counts();
         });
     }
+    
+    function renderStepLayout(data) {
+        var view = $.el(templateStep, data);
+        var choicesContainer = $('.choices', view);
+        
+        $('.delete-step', view).click(function() {
+            view.remove();
+        });
+        
+        $('.add-choice', view).click(function() {
+            var choiceView = renderChoiceLayout({id: data.id, choiceid: choicesContainer.children().length, choice: '', gotostep: ''});
+            choicesContainer.append(choiceView);
+        });
+        
+        $.each(data.choices, function(index, choice) {
+            var choiceView = renderChoiceLayout({id: data.id, choiceid: choicesContainer.children().length, choice: choice, gotostep: index});
+            $('.delete-choice', choiceView).click(function() {
+                choiceView.remove();
+            });
+            choicesContainer.append(choiceView);
+        });
+        
+        return view;
+    }
 
+    function renderChoiceLayout(data) {
+        return $.el(templateChoice, data);
+    }
+    
     function counts() {
         var total = gamebook.local.length;
         $("#gamebook-count").html("<strong>" + total + "</strong>");

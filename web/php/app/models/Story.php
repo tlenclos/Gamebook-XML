@@ -18,7 +18,7 @@ class Story {
                 $this->$k = $v;
             }
         }
-
+ 
         $steps = isset($data['steps']) ? $data['steps'] : null;
         if (!empty($steps) && is_array($steps)) {
             $this->steps = array();
@@ -28,7 +28,15 @@ class Story {
                 !empty($stepData['id']) && $step->id = $stepData['id'];
                 !empty($stepData['description']) && $step->description = $stepData['description'];
                 !empty($stepData['question']) && $step->question = $stepData['question'];
-                !empty($stepData['choices']) && $step->choices = $stepData['choices'];
+                
+                $choices = array();
+                if (!empty($stepData['choices']) && is_array($stepData['choices'])) {
+                    foreach($stepData['choices'] as $choice) {
+                        $choices[$choice['gotostep']] = $choice['description'];
+                    }
+                }
+                $step->choices = $choices;
+                
                 $this->steps[] = $step;
             }
         }

@@ -91,7 +91,7 @@ class Stories {
             $actions = $step->addChild('actions');
             foreach($storyStep->choices as $stepChoiceId => $stepChoiceText) {
                 $choice = $actions->addChild('choice', $stepChoiceText);
-                $choice->addAttribute('gotostop', $stepChoiceId);
+                $choice->addAttribute('gotostep', $stepChoiceId);
             }
         }
 
