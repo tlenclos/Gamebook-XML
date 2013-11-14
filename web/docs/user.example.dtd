@@ -1,0 +1,7 @@
+<!ELEMENT users (user)*>
+<!ELEMENT user (login,password,firstname,lastname)>
+
+<!ELEMENT login (#PCDATA)>
+<!ELEMENT password (#PCDATA)>
+<!ELEMENT firstname (#PCDATA)>
+<!ELEMENT lastname (#PCDATA)>

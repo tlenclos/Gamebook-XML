@@ -1,0 +1,18 @@
+<!ELEMENT game (steps)>
+<!ELEMENT steps (step)*>
+<!ELEMENT step (id,description,question,actions)>
+<!ELEMENT actions (choice)*>
+
+<!ELEMENT id (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ELEMENT question (#PCDATA)>
+<!ELEMENT choice (#PCDATA)>
+
+<!ATTLIST game
+title CDATA #IMPLIED
+lang CDATA #IMPLIED
+>
+
+<!ATTLIST choice
+gotostep CDATA #REQUIRED
+>

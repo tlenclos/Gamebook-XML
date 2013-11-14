@@ -1,3 +1,4 @@
+<!DOCTYPE game SYSTEM "story.example.dtd">
 <game title="Les gerriers XML" lang="fr">
     <steps>
         <step>
