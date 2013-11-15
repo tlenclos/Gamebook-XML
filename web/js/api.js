@@ -14,6 +14,12 @@ function User(db) {
             self.emit("logout", data);
         });
     };
+    
+    self.register = function(data) {
+        db.read('register/'+data.login+'/'+data.password+'/'+data.firstname+'/'+data.lastname).done(function(data) {
+            self.emit("register", data);
+        });
+    };
 }
 
 /* Gamebook model */
@@ -53,8 +59,10 @@ function Gamebook(db) {
 
     self.items = function(callback) {
         db.read().done(function(data) {
-            if (Array.isArray(data)) // TODO called twice at start, why?
+            if (Array.isArray(data)) { // TODO called twice at start, why?
+                self.local = data;
                 callback(data);
+            }
         });
     };
 }

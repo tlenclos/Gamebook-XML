@@ -78,7 +78,14 @@ $app->get('/user/logout/', function () {
 
 $app->get('/user/register/:login/:password/:firstname/:lastname/', function ($login, $password, $firsname, $lastname) {
     try {
-        $response = Users::add(FILE_USER, $login, $password, $firsname, $lastname);
+        $user = Users::add(FILE_USER, $login, $password, $firsname, $lastname);
+        $user->login();
+        
+        $response = array(
+            'success' => true,
+            'message' => 'Welcome '.$user->firstname.' '.$user->lastname,
+            'user' => $user
+        );
     } catch (Exception $e) {
         $response = array(
             'success' => false,

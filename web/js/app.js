@@ -46,10 +46,18 @@ String.prototype.startsWith = function(needle)
 
     user
     .on("login", function(data) {
-        $.notifyBar({html: data.message, position: 'bottom'});
         if (data.success) {
             list();
         }
+        
+        $.notifyBar({html: data.message, position: 'bottom'});
+    })
+    .on("register", function(data) {
+        if (data.success) {
+            list();
+        }
+        
+        $.notifyBar({html: data.message, position: 'bottom'});
     })
     .on("logout", function(data) {
         if (data.success) {
@@ -80,7 +88,7 @@ String.prototype.startsWith = function(needle)
         } else if (url.startsWith('login')) {
             login();
         } else if (url.startsWith('register')) {
-            root.html($.el(templateRegister));
+            register();
         } else if (url.startsWith('logout')) {
             user.logout();
         }
@@ -98,6 +106,17 @@ String.prototype.startsWith = function(needle)
             event.preventDefault();
         });
         root.html(loginView);
+    }
+    
+    function register() {
+        var registerView = $.el(templateRegister);
+        
+        $('input[type="submit"]', registerView).click(function(event) {
+            var data = formToObject($('#form-registration', registerView).serializeArray());
+            user.register(data);
+            event.preventDefault();
+        });
+        root.html(registerView);
     }
     
     function add(index, item) {
@@ -169,8 +188,8 @@ String.prototype.startsWith = function(needle)
     function list() {
         // TODO sometime this method is called twice, why?
         // clear list and add new ones
+        root.empty();
         gamebook.items(function(stories) {
-            root.empty();
             $.each(stories, add);
             // Update the counts
             counts();
