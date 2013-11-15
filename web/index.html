@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Gamebook XML</title>
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css">
+    <link rel="stylesheet" href="pure-min.css">
     <link rel="stylesheet" href="js/notify-bar/jquery.notifyBar.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -45,7 +45,7 @@
         <h3>Step</h3>
         <a class="delete-step pure-button">x</a>
         <p>
-            <input name="steps[{id}][id]" type="hidden" value="{id}" />
+            <input name="steps[{id}][id]" type="hidden" value="{id}" /> 
             <label>Description</label>
             <textarea name="steps[{id}][description]">{description}</textarea>
         </p
@@ -63,9 +63,41 @@
 <script type="html/form-choice">
     <p>
         Texte: <input name="steps[{id}][choices][{choiceid}][description]" type="text" value="{choice}" />
-        Link to: <input name="steps[{id}][choices][{choiceid}][gotostep]" type="text" value="{gotostep}" />
+        Link to: <input name="steps[{id}][choices][{choiceid}][gotostep]" type="text" size="1" value="{gotostep}" />
         <a class="delete-choice pure-button">x</a>
     </p>
+</script>
+
+<script type="html/form-user-login">
+<div class="maincontent">
+    <form id="form-login">
+        <p>
+            <label>Login</label>
+            <input name="login" type="text" value="" />
+            <label>Password</label>
+            <input name="lang" type="password" value="" />
+        </p>
+        <p>
+            <input class="pure-button save" type="submit" value="Login" />
+        </p>
+    </form>
+</div>
+</script>
+
+<script type="html/form-user-register">
+<div class="maincontent">
+    <form id="form-registration">
+        <p>
+            <label>Login</label>
+            <input name="login" type="text" value="" />
+            <label>Password</label>
+            <input name="lang" type="password" value="" />
+        </p>
+        <p>
+            <input class="pure-button save" type="submit" value="Register" />
+        </p>
+    </form>
+</div>
 </script>
 
 <div class="pure-g-r content" id="layout">
@@ -83,6 +115,9 @@
                 </ul>
             </div>
             <a class="pure-button primary-button" href="#/create">Create</a>
+            <hr />
+            <p><a class="pure-button" href="#/login">Login</a></p>
+            <p><a class="pure-button" href="#/register">Register</a></p>
         </div>
     </div>
 

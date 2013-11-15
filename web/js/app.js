@@ -19,6 +19,8 @@ String.prototype.startsWith = function(needle)
         templateForm = $("[type='html/form']").html(),
         templateStep = $("[type='html/form-step']").html(),
         templateChoice = $("[type='html/form-choice']").html(),
+        templateLogin = $("[type='html/form-user-login']").html(),
+        templateRegister = $("[type='html/form-user-register']").html(),
         root = $("#main"),
         nav = $("#filters a")
     ;
@@ -57,6 +59,10 @@ String.prototype.startsWith = function(needle)
             gamebook.get(id, function(story) {
                 edit(story);
             });
+        } else if (url.startsWith('login')) {
+            root.html($.el(templateLogin));
+        } else if (url.startsWith('register')) {
+            root.html($.el(templateRegister));
         }
     });
 
