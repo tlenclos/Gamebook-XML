@@ -1,2 +1,10 @@
 <?xml version="1.0"?>
-<users><user><login>fakeuser@gmail;com</login><password>2398403UFDJEAIO</password><firstname>Firstname</firstname><lastname>Lastname</lastname><stories/></user></users>
+<users>
+    <user>
+        <login>fakeuser@gmail.com</login>
+        <password>2398403UFDJEAIO</password>
+        <firstname>Firstname</firstname>
+        <lastname>Lastname</lastname>
+        <stories/>
+    </user>
+</users>

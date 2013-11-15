@@ -1,4 +1,22 @@
-/* The model */
+/* User model */
+function User(db) {
+
+    var self = $.observable(this);
+
+    self.login = function(login, password) {
+        db.read('login/'+login+'/'+password).done(function(data) {
+            self.emit("login", data);
+        });
+    };
+    
+    self.logout = function() {
+        db.read('logout').done(function(data) {
+            self.emit("logout", data);
+        });
+    };
+}
+
+/* Gamebook model */
 function Gamebook(db) {
 
     var self = $.observable(this);
@@ -35,10 +53,8 @@ function Gamebook(db) {
 
     self.items = function(callback) {
         db.read().done(function(data) {
-            self.local = data;
-
-            // TODO called twice at start, why?
-            callback(data);
+            if (Array.isArray(data)) // TODO called twice at start, why?
+                callback(data);
         });
     };
 }

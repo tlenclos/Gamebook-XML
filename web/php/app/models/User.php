@@ -26,5 +26,28 @@ class User {
             }
         }
     }
+    
+    // User session
+    public function login() {
+        $_SESSION['user'] = $this->login;
+    }
+    
+    public static function isLogged() {
+        return !empty($_SESSION['user']);
+    }
+    
+    public static function stopRequestIfUserIsNotConnected() {
+        if (!self::isLogged()) {
+            echo json_encode(array(
+                'succcess' => false,
+                'message' => 'You must be logged to access this resource'
+            ));
+            exit;
+        }
+    }
+    
+    public static function logout() {
+        unset($_SESSION['user']);
+    }
 
 }

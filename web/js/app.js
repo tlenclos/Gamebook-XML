@@ -11,8 +11,10 @@ String.prototype.startsWith = function(needle)
     // Init
     window.client = new $.RestClient('/Gamebook-XML/web/api.php/'); // TODO change Url
     window.client.add('stories');
+    window.client.add('user');
 
     window.gamebook = new Gamebook(client.stories);
+    window.user = new User(client.user);
 
     // HTML for a single gamebook item
     var templateList = $("[type='html/list']").html(),
@@ -42,6 +44,22 @@ String.prototype.startsWith = function(needle)
     // counts
     .on("add remove", counts);
 
+    user
+    .on("login", function(data) {
+        $.notifyBar({html: data.message, position: 'bottom'});
+        if (data.success) {
+            list();
+        }
+    })
+    .on("logout", function(data) {
+        if (data.success) {
+            $.notifyBar({html: data.message, position: 'bottom'});
+            login();
+        } else {
+            $.notifyBar({html: data.message, position: 'bottom'});
+        }
+    });
+
     // routing
     nav.click(function() {
         return $.route($(this).attr("href"));
@@ -60,13 +78,28 @@ String.prototype.startsWith = function(needle)
                 edit(story);
             });
         } else if (url.startsWith('login')) {
-            root.html($.el(templateLogin));
+            login();
         } else if (url.startsWith('register')) {
             root.html($.el(templateRegister));
+        } else if (url.startsWith('logout')) {
+            user.logout();
         }
     });
 
     // private functions
+    function login() {
+        var loginView = $.el(templateLogin);
+        $('input[type="submit"]', loginView).click(function(event) {
+            user.login(
+                $('input[name=login]').val(),
+                $('input[name=password]').val()
+            );
+            
+            event.preventDefault();
+        });
+        root.html(loginView);
+    }
+    
     function add(index, item) {
         if (this.id)
             item = this;

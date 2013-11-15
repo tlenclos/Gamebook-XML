@@ -2,12 +2,15 @@
 
 /* TODO
   - User register & login
+  - Middleware
+  - Refactor user session (bad code/concept due to schedule)
   - ACL
  */
 
 // Config
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+session_start();
 
 define('DIR_DATA', 'data');
 define('DIR_STORIES', DIR_DATA . '/stories');
@@ -24,6 +27,7 @@ use App\Models\User;
 $app = new \Slim\Slim();
 $app->response->headers->set('Content-Type', 'application/json');
 
+/*
 $app->get('/users/', function () {
     try {
         $response = Users::getAll(FILE_USER);
@@ -36,21 +40,43 @@ $app->get('/users/', function () {
 
     echo json_encode($response);
 });
+*/
 
-$app->get('/login/:login/:password/', function ($login, $password) {
+$app->get('/user/login/:login/:password/', function ($login, $password) {
     try {
-        $response = Users::getUserWithLoginAndPassword(FILE_USER, $login, $password);
+        $user = Users::getUserWithLoginAndPassword(FILE_USER, $login, $password);
+        
+        if ($user) {
+            $user->login();
+            $response =  array(
+                'success' => true,
+                'message' => 'Welcome '.$user->login
+            );
+        } else {
+            $response =  array(
+                'success' => false,
+                'message' => 'Bad credentials'
+            );
+        }
     } catch (Exception $e) {
         $response = array(
             'success' => false,
-            'error' => $e->getMessage()
+            'message' => $e->getMessage()
         );
     }
 
     echo json_encode($response);
 });
 
-$app->get('/register/:login/:password/:firstname/:lastname/', function ($login, $password, $firsname, $lastname) {
+$app->get('/user/logout/', function () {
+    User::logout();
+    echo json_encode(array(
+        'success' => true,
+        'message' => 'You are now disconnected'
+    ));
+});
+
+$app->get('/user/register/:login/:password/:firstname/:lastname/', function ($login, $password, $firsname, $lastname) {
     try {
         $response = Users::add(FILE_USER, $login, $password, $firsname, $lastname);
     } catch (Exception $e) {
@@ -64,6 +90,8 @@ $app->get('/register/:login/:password/:firstname/:lastname/', function ($login, 
 });
 
 $app->get('/delete/:login/', function ($login) {
+    User::stopRequestIfUserIsNotConnected();
+    
     try {
         $response = Users::delete(FILE_USER, $login);
     } catch (Exception $e) {
@@ -77,6 +105,8 @@ $app->get('/delete/:login/', function ($login) {
 });
 
 $app->get('/stories/', function () {
+    User::stopRequestIfUserIsNotConnected();
+    
     try {
         $response = Stories::getAll(DIR_STORIES);
     } catch (Exception $e) {
@@ -90,6 +120,8 @@ $app->get('/stories/', function () {
 });
 
 $app->get('/stories/:id/', function ($id) {
+    User::stopRequestIfUserIsNotConnected();
+    
     try {
         $response = Stories::get(DIR_STORIES, $id);
     } catch (Exception $e) {
@@ -103,6 +135,8 @@ $app->get('/stories/:id/', function ($id) {
 });
 
 $app->delete('/stories/:id/', function ($id) {
+    User::stopRequestIfUserIsNotConnected();
+    
     try {
         $response = Stories::delete(DIR_STORIES, $id);
     } catch (Exception $e) {
@@ -116,6 +150,7 @@ $app->delete('/stories/:id/', function ($id) {
 });
 
 $app->post('/stories/', function () use($app) {
+    User::stopRequestIfUserIsNotConnected();
     $data = $app->request->post();
 
     try {
@@ -134,6 +169,7 @@ $app->post('/stories/', function () use($app) {
 });
 
 $app->put('/stories/:id/', function ($id) use($app) {
+    User::stopRequestIfUserIsNotConnected();
     $data = $app->request()->put();
 
     try {
