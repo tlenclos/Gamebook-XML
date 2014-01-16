@@ -1,6 +1,14 @@
+var filterJson = function(json) {
+    var data = [];
+    $.each(json, function(index, item) {
+        if (typeof item === "object")
+            data.push(item);
+    });
+    return data;
+};
+
 /* User model */
 function User(db) {
-
     var self = $.observable(this);
 
     self.login = function(login, password) {
@@ -8,13 +16,13 @@ function User(db) {
             self.emit("login", data);
         });
     };
-    
+
     self.logout = function() {
         db.read('logout').done(function(data) {
             self.emit("logout", data);
         });
     };
-    
+
     self.register = function(data) {
         db.read('register/'+data.login+'/'+data.password+'/'+data.firstname+'/'+data.lastname).done(function(data) {
             self.emit("register", data);
@@ -24,7 +32,6 @@ function User(db) {
 
 /* Gamebook model */
 function Gamebook(db) {
-
     var self = $.observable(this);
 
     self.local = [];
@@ -35,19 +42,25 @@ function Gamebook(db) {
         }
 
         db.create(data).done(function(data) {
-            self.emit("add", data);
-        });
+            self.emit("add", filterJson(data));
+        }).fail(function(data) {
+            self.emit("add", JSON.parse(data.responseText).msg);
+        });;
     };
 
     self.edit = function(data) {
         db.update(data.id, data).done(function(data) {
-            self.emit("edit", data);
+            self.emit("edit", filterJson(data));
+        }).fail(function(data) {
+            self.emit("edit", JSON.parse(data.responseText).msg);
         });
     };
 
     self.remove = function(id) {
         db.destroy(id).done(function(data) {
             self.emit("remove", id);
+        }).fail(function(data) {
+            self.emit("remove", JSON.parse(data.responseText).msg);
         });
     };
 
@@ -59,7 +72,8 @@ function Gamebook(db) {
 
     self.items = function(callback) {
         db.read().done(function(data) {
-            if (Array.isArray(data)) { // TODO called twice at start, why?
+            if (data) { // TODO called twice at start, why?
+                data = filterJson(data);
                 self.local = data;
                 callback(data);
             }
