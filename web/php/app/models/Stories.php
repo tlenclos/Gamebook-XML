@@ -8,7 +8,7 @@ use App\Models\Story;
 class Stories {
 
     public static function validateStory($file) {
-        
+
     }
 
     // Get all stories
@@ -17,7 +17,7 @@ class Stories {
 
         if ($handle = opendir($dir)) {
             while (false !== ($entry = readdir($handle))) {
-                if ($entry != "." && $entry != "..") {
+                if ($entry != "." && $entry != ".." && pathinfo($entry)['extension'] === 'xml') {
                     $story = Stories::xmlToStory($dir . '/' . $entry);
                     $result[] = $story;
                 }

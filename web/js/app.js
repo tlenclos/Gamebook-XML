@@ -4,17 +4,8 @@ String.prototype.startsWith = function(needle)
 };
 
 /* The presenter */
-
 (function() {
     'use strict';
-
-    // Init
-    window.client = new $.RestClient('/Gamebook-XML/web/api.php/'); // TODO change Url
-    window.client.add('stories');
-    window.client.add('user');
-
-    window.gamebook = new Gamebook(client.stories);
-    window.user = new User(client.user);
 
     // HTML for a single gamebook item
     var templateList = $("[type='html/list']").html(),
@@ -24,22 +15,46 @@ String.prototype.startsWith = function(needle)
         templateLogin = $("[type='html/form-user-login']").html(),
         templateRegister = $("[type='html/form-user-register']").html(),
         root = $("#main"),
-        nav = $("#filters a")
+        nav = $("#filters a"),
+        linkLogin = $('#link-login'),
+        linkLogout = $('#link-logout')
     ;
+    
+    // Init
+    window.client = new $.RestClient('/Gamebook-XML/web/api.php/'); // TODO change Url
+    window.client.add('stories');
+    window.client.add('user');
 
+    window.gamebook = new Gamebook(client.stories);
+    window.user = new User(client.user);
+    
+    linkLogout.hide();
+    
     /* Listen to model events */
     gamebook
-    .on("add", function() {
-        $.notifyBar({html: 'Story saved', position: 'bottom'});
-        list();
+    .on("add", function(item) {
+        if(typeof item === 'string') {
+            $.notifyBar({html: item, position: 'bottom'});
+        } else {
+            $.notifyBar({html: 'Story saved', position: 'bottom'});
+            list();
+        }
     })
     .on("remove", function(id) {
-        $.notifyBar({html: 'Story deleted', position: 'bottom'});
-        $("#" + id).remove();
+        if(typeof id === 'string') {
+            $.notifyBar({html: item, position: 'bottom'});
+        } else {
+            $.notifyBar({html: 'Story deleted', position: 'bottom'});
+            $("#" + id).remove();
+        }
     })
     .on("edit", function(item) {
-        var el = $("#" + item.id);
-        $.notifyBar({html: 'Story saved', position: 'bottom'});
+        if(typeof item === 'string') {
+            $.notifyBar({html: item, position: 'bottom'});
+        } else {
+            var el = $("#" + item.id);
+            $.notifyBar({html: 'Story saved', position: 'bottom'});
+        }
     })
     // counts
     .on("add remove", counts);
@@ -48,28 +63,33 @@ String.prototype.startsWith = function(needle)
     .on("login", function(data) {
         if (data.success) {
             list();
+            linkLogin.hide();
+            linkLogout.show();
         }
-        
+
         $.notifyBar({html: data.message, position: 'bottom'});
     })
     .on("register", function(data) {
         if (data.success) {
             list();
         }
-        
+
         $.notifyBar({html: data.message, position: 'bottom'});
     })
     .on("logout", function(data) {
         if (data.success) {
             $.notifyBar({html: data.message, position: 'bottom'});
             login();
+            linkLogout.hide();
+            linkLogin.show();
         } else {
             $.notifyBar({html: data.message, position: 'bottom'});
         }
     });
 
     // routing
-    nav.click(function() {
+    nav.click(function(event) {
+        event.preventDefault();
         return $.route($(this).attr("href"));
     });
 
@@ -98,19 +118,26 @@ String.prototype.startsWith = function(needle)
     function login() {
         var loginView = $.el(templateLogin);
         $('input[type="submit"]', loginView).click(function(event) {
-            user.login(
-                $('input[name=login]').val(),
-                $('input[name=password]').val()
-            );
-            
+            var login = $('input[name=login]').val();
+            var password = $('input[name=password]').val();
+
+            if (login !== '' && password !== '') {
+                user.login(
+                    login,
+                    password
+                );
+            } else {
+                $.notifyBar({html: 'Veuillez spécifier un mot de passe et un password', position: 'bottom'});
+            }
+
             event.preventDefault();
         });
         root.html(loginView);
     }
-    
+
     function register() {
         var registerView = $.el(templateRegister);
-        
+
         $('input[type="submit"]', registerView).click(function(event) {
             var data = formToObject($('#form-registration', registerView).serializeArray());
             user.register(data);
@@ -118,7 +145,7 @@ String.prototype.startsWith = function(needle)
         });
         root.html(registerView);
     }
-    
+
     function add(index, item) {
         if (this.id)
             item = this;
@@ -142,11 +169,11 @@ String.prototype.startsWith = function(needle)
             stepsLayout
         ;
         root.empty();
-        
+
         if (item) {
             view = $.el(templateForm, item);
             stepsLayout = $('#steps', view);
-            
+
             $.each(item.steps, function(index, step) {
                 stepsLayout.append(renderStepLayout(step));
             });
@@ -164,10 +191,10 @@ String.prototype.startsWith = function(needle)
                 question: '',
                 choices: []
             };
-            
+
             stepsLayout.append(renderStepLayout(stepData));
         });
-        
+
         // Save form
         $('#form-gamebook', view).submit (function(event) {
             var data = formToObject($('#form-gamebook').serializeArray());
@@ -177,10 +204,10 @@ String.prototype.startsWith = function(needle)
             } else {
                 gamebook.add(data);
             }
-            
+
             event.preventDefault();
         });
-        
+
         view.appendTo(root);
         root.append(view);
     }
@@ -195,28 +222,28 @@ String.prototype.startsWith = function(needle)
             counts();
         });
     }
-    
+
     function renderStepLayout(data) {
         var data = data ? data : {id: 0, description: '', question: ''};
         var view = $.el(templateStep, data);
         var choicesContainer = $('.choices', view);
-        
+
         $('.delete-step', view).click(function() {
             view.remove();
         });
-        
+
         $('.add-choice', view).click(function() {
             var choiceView = renderChoiceLayout({id: data ? data.id : 0, choiceid: choicesContainer.children().length, choice: '', gotostep: ''});
             choicesContainer.append(choiceView);
         });
-        
+
         if (data && data.choices) {
             $.each(data.choices, function(index, choice) {
                 var choiceView = renderChoiceLayout({id: data.id, choiceid: choicesContainer.children().length, choice: choice, gotostep: index});
                 choicesContainer.append(choiceView);
             });
         }
-        
+
         return view;
     }
 
@@ -227,7 +254,7 @@ String.prototype.startsWith = function(needle)
         });
         return view;
     }
-    
+
     function counts() {
         var total = gamebook.local.length;
         $("#gamebook-count").html("<strong>" + total + "</strong>");

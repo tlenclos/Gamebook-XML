@@ -7,4 +7,11 @@
         <lastname>Lastname</lastname>
         <stories/>
     </user>
+    <user>
+        <login>test@gmail.com</login>
+        <password>test</password>
+        <firstname>Firstname</firstname>
+        <lastname>Lastname</lastname>
+        <stories/>
+    </user>
 </users>

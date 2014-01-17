@@ -1,10 +1,9 @@
 <?php
+namespace App\Tools;
 
-header('Content-type: text/html; charset=utf-8');
+class XMLValidator {
 
-class XMLHelper {
-
-    public static function validate_xml_file($dtdFilePath, $xmlFilePath, $rootTag) {
+    public static function validateFile($dtdFilePath, $xmlFilePath, $rootTag) {
         $xml = file_get_contents($xmlFilePath);
 
         $old = new DOMDocument;
@@ -23,5 +22,3 @@ class XMLHelper {
     }
 
 }
-
-?>

@@ -1,7 +1,7 @@
 <!DOCTYPE users SYSTEM "user.example.dtd">
 <users>
     <user>
-        <login>fakeuser@gmail;com</login>
+        <login>fakeuser@gmail.com</login>
         <password>2398403UFDJEAIO</password>
         <firstname>Firstname</firstname>
         <lastname>Lastname</lastname>
