@@ -17,7 +17,7 @@ public class MainView extends JFrame
 	public void setupView(String title)
 	{
 		setTitle("Gamebook XML - "+title);
-		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE); //EXIT_ON_CLOSE
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension d = tk.getScreenSize();
 		int w = d.width;
@@ -33,18 +33,18 @@ public class MainView extends JFrame
 	
 	public boolean isVisible()
 	{
-		return this.isVisible();
+		return super.isVisible();
 	}
 	
 	public void setVisible(boolean visible)
 	{
-		setVisible(visible);
+		super.setVisible(visible);
 	}
 	
 	public void close()
 	{
-		this.setVisible(false);
-		this.dispose();
+		super.setVisible(false);
+		super.dispose();
 	}
 	
 	public void putGBC(int gridx, int gridy,int gridwidth, int gridheight)
