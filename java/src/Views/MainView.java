@@ -1,4 +1,4 @@
-package View;
+package Views;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class MainView extends JFrame
 {
@@ -54,6 +55,11 @@ public class MainView extends JFrame
 		gbc.gridwidth = gridwidth;//nb de colonnes
 		gbc.gridheight = gridheight;//nb de lignes
 		gbc.fill = GridBagConstraints.BOTH;
+	}
+	
+	public void showMessageDialog(String text)
+	{
+		JOptionPane.showMessageDialog(null, text);
 	}
 	
 	public MainView()

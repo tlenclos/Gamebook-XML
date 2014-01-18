@@ -1,4 +1,4 @@
-package View;
+package Views;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import Game.Authentication;
+import Controllers.Authentication;
 
 public class AuthenticationView extends MainView
 {	

@@ -1,24 +1,2 @@
-<game title="Les guerriers XML" lang="fr">
-    <steps>
-        <step>
-            <id>3</id>
-            <description>Lorem ipsum blabla1</description>
-            <question>Que voulez-vous faire?1</question>
-            <actions>
-                <choice gotostep="3">Choix 1</choice>
-                <choice gotostep="4">Choix 2</choice>
-                <choice gotostep="5">Choix 3</choice>
-            </actions>
-        </step>
-        <step>
-            <id>2</id>
-            <description>Lorem ipsum blabla2</description>
-            <question>Que voulez-vous faire?2</question>
-            <actions>
-                <choice gotostep="3">Choix 1</choice>
-                <choice gotostep="4">Choix 2</choice>
-                <choice gotostep="5">Choix 3</choice>
-            </actions>
-        </step>
-    </steps>
-</game>
+<?xml version="1.0"?>
+<game title="Les guerriers XML" lang="en"><steps><step><id>3</id><description>Once upon a time...</description><question>Continue ?</question><actions><choice gotostep="3">YES</choice><choice gotostep="4">NO</choice><choice gotostep="5">Maybe...</choice></actions></step><step><id>2</id><description>Something happened.</description><question>What do you do ?</question><actions><choice gotostep="3">Go back</choice><choice gotostep="4">Nothing...</choice><choice gotostep="5">Ignore and continue..</choice></actions></step></steps></game>

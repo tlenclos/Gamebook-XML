@@ -29,6 +29,8 @@ public class User
 		{
 			String xml = xstream.toXML(this);
 			try {
+				if(file.exists() == false)
+					file.createNewFile();
 				FileManager.setContents(file, xml);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
