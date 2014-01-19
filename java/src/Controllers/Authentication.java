@@ -42,8 +42,11 @@ public class Authentication implements WebServiceConnectionDelegate
 		boolean success = false;
 		String message = null;
 		try {
-			success = json.getBoolean("success");
-			message = json.getString("message");
+			if( json != null )
+			{
+				success = json.getBoolean("success");
+				message = json.getString("message");
+			}
 		}
 		catch (JSONException e)
 		{
@@ -62,6 +65,7 @@ public class Authentication implements WebServiceConnectionDelegate
 				message = "Unknown Error";
 			
 			authenticationView.showMessageDialog(message);
+			authenticationView.stopProgress();
 		}
 		
 		webServiceConnection = null;
