@@ -94,6 +94,15 @@ $app->get('/delete/:login/', function ($login) use ($app) {
 });
 
 /* Stories */
+$app->get('/stories/xml/', function () use ($app) {
+    User::stopRequestIfUserIsNotConnected();
+
+    $response = array();
+    $response['path'] = 'data/stories/';
+    $response['stories'] = Stories::getAll(DIR_STORIES, true);
+    $app->render(200, (array) $response);
+});
+
 $app->get('/stories/', function () use ($app) {
     User::stopRequestIfUserIsNotConnected();
 
@@ -133,4 +142,4 @@ $app->put('/stories/:id/', function ($id) use($app) {
     $app->render(200, (array) $response);
 });
 
-$app->run();
+$app->run();    

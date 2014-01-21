@@ -12,13 +12,17 @@ class Stories {
     }
 
     // Get all stories
-    public static function getAll($dir) {
+    public static function getAll($dir, $xmlFiles = false) {
         $result = array();
 
         if ($handle = opendir($dir)) {
             while (false !== ($entry = readdir($handle))) {
                 if ($entry != "." && $entry != ".." && pathinfo($entry)['extension'] === 'xml') {
-                    $story = Stories::xmlToStory($dir . '/' . $entry);
+                    if ($xmlFiles) {
+                        $story= $entry;
+                    } else {
+                        $story = Stories::xmlToStory($dir . '/' . $entry);
+                    }
                     $result[] = $story;
                 }
             }
