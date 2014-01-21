@@ -1,3 +1,4 @@
 .idea
 vendor
 java/bin/*
+*.class
