@@ -19,4 +19,19 @@ public class WebService
 		
 		return null;
 	}
+	
+	public static String getStringForUrl(String url)
+	{
+		try
+		{
+			String s = HTTPRequest.getWithDefaultApacheClient(url);
+			return s;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}		
+		
+		return null;
+	}
 }

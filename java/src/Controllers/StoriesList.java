@@ -1,8 +1,8 @@
 package Controllers;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,6 +11,7 @@ import Views.StoriesListView;
 import WebService.WebServiceConnection;
 import WebService.WebServiceConnection.WebServiceConnectionDelegate;
 import WebService.WebServiceRequest;
+import XMLParser.StoriesXMLParser;
 
 public class StoriesList implements WebServiceConnectionDelegate
 {
@@ -26,9 +27,32 @@ public class StoriesList implements WebServiceConnectionDelegate
 	@Override
 	public void webServiceDidRetrieveJSON(JSONObject json)
 	{
-        Iterator<?> keys = json.keys();
+		//get xml files
+		ArrayList<String> files = new ArrayList<String>();
+		JSONArray jsonArray = null;
+		try
+		{
+			jsonArray = json.getJSONArray("stories");			
+			if (jsonArray != null)
+			{
+				for (int i=0;i<jsonArray.length();i++)
+					files.add(jsonArray.get(i).toString());
+			}
+		}
+		catch (JSONException e)
+		{
+			e.printStackTrace();
+		} 		
+		
+		//xml parser		
+		ArrayList<Story> stories = StoriesXMLParser.parseWithFiles(files);
+		
+		
+		// json parser (deprecated) : 
+		/*
         ArrayList<Story> stories = new ArrayList<Story>();
-
+		Iterator<?> keys = json.keys();
+        
         while( keys.hasNext() )
         {
         	try
@@ -45,6 +69,8 @@ public class StoriesList implements WebServiceConnectionDelegate
 				e.printStackTrace();
 			}
         }
+        
+        */
         
         listView = new StoriesListView(stories,this);
         listView.setVisible(true);

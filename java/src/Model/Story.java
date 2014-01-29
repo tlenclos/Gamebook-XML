@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class Story
 {
@@ -20,7 +23,6 @@ public class Story
 			id = json.getString("id");
 			title = json.getString("title");
 			language = json.getString("lang");
-			id = json.getString("id");
 			
 			JSONArray jsonSteps = json.getJSONArray("steps");
 			
@@ -34,6 +36,22 @@ public class Story
 		catch (JSONException e)
 		{
 			e.printStackTrace();
+		}
+	}
+	
+	public Story(Node xmlNode)
+	{
+		Element e = (Element)xmlNode;
+		title = e.getAttribute("title");
+		language = e.getAttribute("lang");
+		id = e.getAttribute("id");
+		
+		NodeList stepNodes = xmlNode.getFirstChild().getChildNodes();
+		for(int i=0;i<stepNodes.getLength();i++)
+		{
+			Node stepNode = stepNodes.item(i);
+			Step step = new Step(stepNode);
+			steps.add(step);			
 		}
 	}
 	
