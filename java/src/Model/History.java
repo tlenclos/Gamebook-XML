@@ -1,5 +1,6 @@
 package Model;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class History {
 	}
 	
 	
-	public void RemoveGame(int storyId)
+	public void RemoveGame(String storyId)
 	{
 		GameHistory game = FindGameByStoryId(storyId);
 		if (game != null)
@@ -55,11 +56,11 @@ public class History {
 		Games.remove(game);
 	}
 	
-	public GameHistory FindGameByStoryId(int storyId)
+	public GameHistory FindGameByStoryId(String storyId)
 	{
 		for(GameHistory actGame : Games)
 		{
-			if (actGame.StoryId == storyId)
+			if (actGame.StoryId.equalsIgnoreCase(storyId))
 				return actGame;
 		}
 		return null;
@@ -81,13 +82,13 @@ public class History {
 	
 	public static History loadHistoryForUser(String username)
 	{
-		Document xml = XmlHelper.loadFromFile("history/" + username + ".xml");
+		Document xml = XmlHelper.loadFromFile("history." + username + ".xml");
 		if (xml == null)
 			return null;
 		
 		History history = new History(xml.getDocumentElement());
 		
-		if (history.UserName != username)
+		if (!history.UserName.equalsIgnoreCase(username))
 			return null;
 		
 		return history;
@@ -97,7 +98,13 @@ public class History {
 	{
 		try
 		{
-			FileWriter writer = new FileWriter("history/" + history.UserName + ".xml",false);
+			File file = new File("history." + history.UserName + ".xml");
+			if (file.exists())
+				file.delete();
+			
+			file.createNewFile();
+			
+			FileWriter writer = new FileWriter(file);
 			writer.write(history.toXML());
 			writer.flush();
 			writer.close();

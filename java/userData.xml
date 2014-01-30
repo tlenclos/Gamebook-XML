@@ -1,4 +1,21 @@
 <User.User>
-  <username>test</username>
-  <password>test</password>
+  <Username>test</Username>
+  <Password>test</Password>
+  <UserHistory>
+    <UserName>test</UserName>
+    <Games>
+      <Model.GameHistory>
+        <StoryId></StoryId>
+        <Steps>
+          <string>3</string>
+          <string>3</string>
+          <string>3</string>
+          <string>3</string>
+          <string>3</string>
+          <string>3</string>
+          <string>3</string>
+        </Steps>
+      </Model.GameHistory>
+    </Games>
+  </UserHistory>
 </User.User>
