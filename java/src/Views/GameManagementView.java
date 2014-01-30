@@ -2,21 +2,17 @@ package Views;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
+
 
 import Controllers.StoryGame;
-import Model.Game;
 import Model.Story;
 
 public class GameManagementView extends MainView  implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	
-	JLabel timeLabel;
 	JButton startButton;
 	JButton restartButton;
 	JButton stopButton;
@@ -26,7 +22,7 @@ public class GameManagementView extends MainView  implements ActionListener
 	Story story;
 	StoryGame storyGame;
 	
-	Timer timer = new Timer();
+	boolean isPaused = false;
 	
 	public GameManagementView(Story story)
 	{
@@ -34,35 +30,25 @@ public class GameManagementView extends MainView  implements ActionListener
 		
 		super.setupView("Game Manager");
 		
-		timeLabel = new JLabel("");
+
 		startButton = new JButton("Start Game");
 		restartButton = new JButton("Restart Game");
 		stopButton = new JButton("Stop Game");
 		resumeButton = new JButton("Resume Game");
 		pauseButton = new JButton("Pause");
 		
-		super.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		
-		timer.scheduleAtFixedRate(new TimerTask()
-		{
-			  @Override
-			  public void run()
-			  {
-				  timeLabel.setText(Game.getInstance().timeElapsed());
-			  }
-		}, 1000, 1000);
+		super.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
 		
 		super.putGBC(0, 0, 1, 1);
-		add(timeLabel,gbc);
-		super.putGBC(0, 1, 1, 1);
 		add(startButton,gbc);
-		super.putGBC(0, 2, 1, 1);
+		super.putGBC(0, 1, 1, 1);
 		add(stopButton,gbc);
-		super.putGBC(0, 3, 1, 1);
+		super.putGBC(0, 2, 1, 1);
 		add(restartButton,gbc);
-		super.putGBC(0, 4, 1, 1);
+		super.putGBC(0, 3, 1, 1);
 		add(resumeButton,gbc);
-		super.putGBC(0, 5, 1, 1);
+		super.putGBC(0, 4, 1, 1);
 		add(pauseButton,gbc);
 		
 		setSize(150, 250);
@@ -107,10 +93,7 @@ public class GameManagementView extends MainView  implements ActionListener
 		{
 			pause();
 		}
-		else if(action.equals("save"))
-		{
-			save(-1,-1);
-		}
+
 	}
 	
 	public void start()
@@ -118,7 +101,8 @@ public class GameManagementView extends MainView  implements ActionListener
 		if(storyGame == null)
 			storyGame = new StoryGame(story);
 		
-		Game.getInstance().start();
+		isPaused = false;
+		
 		startButton.setVisible(false);
 		stopButton.setVisible(true);
 		resumeButton.setVisible(false);
@@ -128,7 +112,8 @@ public class GameManagementView extends MainView  implements ActionListener
 	
 	public void restart()
 	{
-		Game.getInstance().restart();
+		storyGame.loadFirstStep();
+		isPaused = false;
 		startButton.setVisible(false);
 		stopButton.setVisible(true);
 		resumeButton.setVisible(false);
@@ -144,7 +129,6 @@ public class GameManagementView extends MainView  implements ActionListener
 			storyGame = null;
 		}
 		
-		Game.getInstance().stop();
 		startButton.setVisible(true);
 		stopButton.setVisible(false);
 		resumeButton.setVisible(false);
@@ -154,8 +138,8 @@ public class GameManagementView extends MainView  implements ActionListener
 	
 	public void resume()
 	{
+		isPaused = false;
 		storyGame.setVisible(true);
-		Game.getInstance().resume();
 		startButton.setVisible(false);
 		stopButton.setVisible(true);
 		resumeButton.setVisible(false);
@@ -163,15 +147,11 @@ public class GameManagementView extends MainView  implements ActionListener
 		restartButton.setVisible(true);
 	}
 	
-	public void save(int storyId, int stepId)
-	{
-		Game.getInstance().save(storyId,stepId);
-	}
-	
+
 	public void pause()
 	{
+		isPaused = true;
 		storyGame.setVisible(false);
-		Game.getInstance().pause();
 		startButton.setVisible(false);
 		stopButton.setVisible(false);
 		resumeButton.setVisible(true);

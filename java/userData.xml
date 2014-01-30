@@ -5,14 +5,8 @@
     <UserName>test</UserName>
     <Games>
       <Model.GameHistory>
-        <StoryId></StoryId>
+        <StoryId>story-test</StoryId>
         <Steps>
-          <string>3</string>
-          <string>3</string>
-          <string>3</string>
-          <string>3</string>
-          <string>3</string>
-          <string>3</string>
           <string>3</string>
         </Steps>
       </Model.GameHistory>

@@ -13,9 +13,7 @@ import javax.swing.JTextArea;
 
 import Controllers.StoryGame;
 import Model.Choice;
-import Model.GameHistory;
 import Model.Step;
-import User.User;
 
 public class StoryGameView extends MainView implements ActionListener
 {

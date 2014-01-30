@@ -24,13 +24,7 @@ public class StoryGame
 		
 		if (gameHistory == null)
 		{
-			gameHistory = new GameHistory();
-			gameHistory.StoryId = story.id;
-			Step firstStep = story.steps.get(0);
-			gameHistory.AddStep(firstStep.id + "");
-			storyGameView.loadStep(firstStep);
-			
-			User.getCurrentUser().UserHistory.AddGame(gameHistory);
+			loadFirstStep();
 		}
 		else
 		{
@@ -40,6 +34,15 @@ public class StoryGame
 		
 		
 		storyGameView.setVisible(true);
+	}
+	
+	public void loadFirstStep()
+	{
+		gameHistory = new GameHistory();
+		gameHistory.StoryId = story.id;
+		User.getCurrentUser().UserHistory.AddGame(gameHistory);
+		Step firstStep = story.steps.get(0);
+		loadStepWithId(firstStep.id + "",true);
 	}
 	
 	public void loadStepWithId(String id,boolean newStep)
@@ -53,7 +56,8 @@ public class StoryGame
 				History.saveHistory(User.getCurrentUser().UserHistory);
 			}
 			//need to find a way to refresh view only
-			storyGameView.close();
+			if (storyGameView != null)
+				storyGameView.close();
 			storyGameView = new StoryGameView(this);
 			storyGameView.loadStep(step);
 			storyGameView.setVisible(true);

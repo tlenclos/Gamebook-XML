@@ -35,11 +35,10 @@ public class History {
 	
 	public boolean AddGame(GameHistory game)
 	{
-		if (FindGameByStoryId(game.StoryId) != null)
-		{
-			//already had saved that game
-			return false;
-		}
+		GameHistory lastGame = FindGameByStoryId(game.StoryId);
+		if (lastGame != null)
+			RemoveGame(lastGame);
+		
 		Games.add(game);
 		return true;
 	}

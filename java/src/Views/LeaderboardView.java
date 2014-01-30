@@ -25,7 +25,7 @@ public class LeaderboardView extends MainView
 		DefaultListModel listModel = new DefaultListModel();
 		for (User user : users)
 		{
-			listModel.addElement(user.username);
+			listModel.addElement(user.Username);
 		}
 		
 		list = new JList(listModel);
