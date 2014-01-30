@@ -34,4 +34,14 @@ public class StoryGame
 			storyGameView.showMessageDialog("Step not found! Please check the Gamebook's database");
 		}
 	}
+	
+	public void close()
+	{
+		storyGameView.close();
+	}
+	
+	public void setVisible(boolean visible)
+	{
+		storyGameView.setVisible(visible);
+	}
 }

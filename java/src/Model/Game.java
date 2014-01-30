@@ -16,10 +16,11 @@ public class Game
 	public final static String kGameXMLFilename = "gameData.xml";
 	
 	XStream xstream = new XStream();	
-	Timer timer = new Timer();
+	Timer timer = null;
 	boolean isPaused;
 	int seconds = 0;
 	int lastKnownStepId = -1;
+	int lastKnownStoryId = -1;
 	
 	protected Game()
 	{
@@ -39,6 +40,7 @@ public class Game
 	public void restart()
 	{
 		lastKnownStepId = -1;
+		lastKnownStoryId = -1;
 		seconds = 0;
 		start();
 	}
@@ -46,6 +48,8 @@ public class Game
 	public void start() //starts a new game
 	{
 		isPaused = false;
+		if(timer == null)
+			timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask()
 		{
 			  @Override
@@ -76,9 +80,10 @@ public class Game
 		timer = null;
 	}
 	
-	public void save(int stepId)
+	public void save(int storyId, int stepId)
 	{
 		lastKnownStepId = stepId;
+		lastKnownStoryId = storyId;
 		File file = new File(kGameXMLFilename);
 		String xml = xstream.toXML(this);
 		
@@ -114,6 +119,7 @@ public class Game
 			
 			seconds = lastGame.seconds;
 			lastKnownStepId = lastGame.lastKnownStepId;
+			lastKnownStoryId = lastGame.lastKnownStoryId;
 			start();
 		}
 	}
