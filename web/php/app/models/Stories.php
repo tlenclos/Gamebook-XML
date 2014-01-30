@@ -16,14 +16,19 @@ class Stories {
         $result = array();
 
         if ($handle = opendir($dir)) {
-            while (false !== ($entry = readdir($handle))) {
-                if ($entry != "." && $entry != ".." && pathinfo($entry)['extension'] === 'xml') {
-                    if ($xmlFiles) {
-                        $story= $entry;
-                    } else {
-                        $story = Stories::xmlToStory($dir . '/' . $entry);
-                    }
-                    $result[] = $story;
+            while (false != ($entry = readdir($handle))) {
+                if ($entry != "." && $entry != "..") 
+				{
+					$pathInfos = pathinfo($entry);
+					if ($pathInfos['extension'] == 'xml') 
+					{
+						if ($xmlFiles)
+							$story= $entry;
+						else
+							$story = Stories::xmlToStory($dir . '/' . $entry);
+							
+						$result[] = $story;
+					}
                 }
             }
             closedir($handle);
