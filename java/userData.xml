@@ -1,6 +1,7 @@
 <User.User>
   <Username>test</Username>
   <Password>test</Password>
+  <Score>0</Score>
   <UserHistory>
     <UserName>test</UserName>
     <Games>
@@ -8,6 +9,7 @@
         <StoryId>story-test</StoryId>
         <Steps>
           <string>3</string>
+          <string>2</string>
         </Steps>
       </Model.GameHistory>
     </Games>

@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import Lib.FileManager;
 import Model.History;
 
@@ -16,6 +19,7 @@ public class User
 	
 	public String Username;
 	public String Password;
+	public int Score;
 	
 	public History UserHistory = null;
 	
@@ -27,6 +31,34 @@ public class User
 	{
 		this.Username = username;
 		this.Password = password;
+		UserHistory = History.loadHistoryForUser(Username);
+		if (UserHistory == null)
+		{
+			UserHistory = new History();
+			UserHistory.UserName = Username;
+		}
+	}
+	
+	public User(Node xmlNode)
+	{
+		NodeList userChildren = xmlNode.getChildNodes();
+		for(int i=0;i<userChildren.getLength();i++)
+		{
+			Node n = userChildren.item(i);
+			if(n.getNodeName().equals("score") && n.getFirstChild() != null)
+			{
+				Score = Integer.parseInt(n.getFirstChild().getNodeValue());
+			}
+			else if(n.getNodeName().equals("login"))
+			{
+				Username = n.getFirstChild().getNodeValue();
+			}
+			else if(n.getNodeName().equals("password"))
+			{
+				Password = n.getFirstChild().getNodeValue();
+			}		
+		}
+		
 		UserHistory = History.loadHistoryForUser(Username);
 		if (UserHistory == null)
 		{

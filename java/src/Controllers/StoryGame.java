@@ -1,24 +1,30 @@
 package Controllers;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import Model.GameHistory;
 import Model.History;
 import Model.Step;
 import Model.Story;
 import User.User;
 import Views.StoryGameView;
+import WebService.WebServiceConnection;
+import WebService.WebServiceConnection.WebServiceConnectionDelegate;
+import WebService.WebServiceRequest;
 
-public class StoryGame
+public class StoryGame implements WebServiceConnectionDelegate
 {
 	public Story story;
 	StoryGameView storyGameView;
 	GameHistory gameHistory;
+	WebServiceConnection webServiceConnection = null;
 	
 	public StoryGame(Story story)
 	{
 		this.story = story;
 		
 		gameHistory = User.getCurrentUser().UserHistory.FindGameByStoryId(story.id);
-		
 		
 		storyGameView = new StoryGameView(this);
 		
@@ -61,6 +67,12 @@ public class StoryGame
 			storyGameView = new StoryGameView(this);
 			storyGameView.loadStep(step);
 			storyGameView.setVisible(true);
+			
+			if(step.choices.size() == 0)
+			{
+				WebServiceRequest request =  WebServiceRequest.ScoreAddRequest(1);
+				webServiceConnection = new WebServiceConnection(request, this);
+			}
 		}
 		else
 		{
@@ -76,5 +88,25 @@ public class StoryGame
 	public void setVisible(boolean visible)
 	{
 		storyGameView.setVisible(visible);
+	}
+
+	@Override
+	public void webServiceDidRetrieveJSON(JSONObject json)
+	{
+		boolean success = false;
+		try
+		{
+			success = json.getBoolean("success");
+		}
+		catch (JSONException e)
+		{
+			e.printStackTrace();
+		}
+		
+		if(success)
+		{
+			if(Leaderboard.instance != null)
+				Leaderboard.instance.reload();
+		}
 	}
 }

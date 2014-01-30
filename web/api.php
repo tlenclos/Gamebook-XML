@@ -30,22 +30,21 @@ $app->response->headers->set('Content-Type', 'application/json');
 $app->view(new \JsonApiView());
 $app->add(new \JsonApiMiddleware());
 
-/*
-$app->get('/users/', function () {
-    try {
-        $response = Users::getAll(FILE_USER);
-    } catch (Exception $e) {
-        $response = array(
-            'success' => false,
-            'error' => $e->getMessage()
-        );
-    }
-
-    echo json_encode($response);
-});
-*/
-
 /* Users */
+
+$app->get('/users/', function () use ($app) 
+{
+    $response =  array(
+            'success' => true,
+            'path' => FILE_USER,
+            'filename' => basename(FILE_USER)
+    );
+    
+    $app->render(200, $response);
+});
+
+// User
+
 $app->get('/user/login/:login/:password/', function ($login, $password) use ($app) {
     $user = Users::getUserWithLoginAndPassword(FILE_USER, $login, $password);
 
@@ -86,6 +85,15 @@ $app->get('/user/register/:login/:password/:firstname/:lastname/', function ($lo
     $app->render(200, $response);
 });
 
+$app->get('/delete/:login/', function ($login) use ($app) {
+    User::stopRequestIfUserIsNotConnected();
+
+    $response = Users::delete(FILE_USER, $login);
+    $app->render(200, (array) $response);
+});
+
+// score
+
 $app->get('/user/setScore/:score/', function ($score) use ($app) {
     
     $userLogin = $_SESSION['user'];
@@ -106,11 +114,25 @@ $app->get('/user/setScore/:score/', function ($score) use ($app) {
     $app->render(200, $response);
 });
 
-$app->get('/delete/:login/', function ($login) use ($app) {
-    User::stopRequestIfUserIsNotConnected();
-
-    $response = Users::delete(FILE_USER, $login);
-    $app->render(200, (array) $response);
+$app->get('/user/addScore/:score/', function ($score) use ($app) {
+    
+    $userLogin = $_SESSION['user'];
+    $success = false;
+    if( isset( $userLogin ))
+    {
+        $user = Users::getUserWithLogin(FILE_USER,$userLogin);
+        if($user != false)
+        {
+            $value = intval($user->score) + intval($score);
+            Users::update(FILE_USER,$userLogin,array("score" => $value));
+            $success = true;
+        }
+    }
+     
+    $response = array(
+        'success' => $success,
+    );
+    $app->render(200, $response);
 });
 
 /* Stories */

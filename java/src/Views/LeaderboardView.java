@@ -22,18 +22,26 @@ public class LeaderboardView extends MainView
 		
 		super.setupView("Leaderboard");
 		
-		DefaultListModel listModel = new DefaultListModel();
-		for (User user : users)
-		{
-			listModel.addElement(user.Username);
-		}
+		setSize(250, 250);
+		setLocation(125,25);		
 		
-		list = new JList(listModel);
+		list = new JList();
+		reload();
         list.setVisibleRowCount(25);
         JScrollPane listScrollPane = new JScrollPane(list);
         
-        listScrollPane.setPreferredSize(new Dimension(250, 250));
+        listScrollPane.setPreferredSize(new Dimension(225,225));
         super.putGBC(0, 0, 25, 25);
         add(listScrollPane,gbc);
+	}
+	
+	public void reload()
+	{
+		DefaultListModel listModel = new DefaultListModel();
+		for (User user : users)
+		{
+			listModel.addElement(user.Username + " [ Score : "+user.Score+"]");
+		}		
+		list.setModel(listModel);
 	}
 }

@@ -57,6 +57,7 @@ public class Authentication implements WebServiceConnectionDelegate
 		{
 			user.setAsDefault();
 			new StoriesList();
+			new Leaderboard();
 			authenticationView.close();
 		}
 		else

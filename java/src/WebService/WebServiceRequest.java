@@ -5,8 +5,10 @@ import User.User;
 public class WebServiceRequest
 {
 	public String URLString;
-	public final static String API_URL = "http://localhost:8080/Gamebook-XML/web/api.php/";
-	public final static String DATA_URL = "http://localhost:8080/Gamebook-XML/web/data/stories/";
+	public final static String SERVER_URL = "http://localhost:8080/Gamebook-XML/web/";
+	public final static String API_URL = SERVER_URL+"api.php/";
+	public final static String DATA_URL = SERVER_URL+"data/stories/";
+	public final static String USERS_URL = SERVER_URL+"data/users/";
 	
 	// UserAuthentication
 	public static WebServiceRequest AuthenticationRequestForUser(User user)
@@ -27,6 +29,27 @@ public class WebServiceRequest
 	{
 		WebServiceRequest request = new WebServiceRequest();
 		request.URLString = DATA_URL+xmlFileName;
+		return request;
+	}
+	
+	public static WebServiceRequest UserRequestXML(String xmlFileName)
+	{
+		WebServiceRequest request = new WebServiceRequest();
+		request.URLString = USERS_URL+xmlFileName;
+		return request;
+	}
+	
+	public static WebServiceRequest UsersRequestXML()
+	{
+		WebServiceRequest request = new WebServiceRequest();
+		request.URLString = API_URL+"/users";
+		return request;
+	}
+	
+	public static WebServiceRequest ScoreAddRequest(int score)
+	{
+		WebServiceRequest request = new WebServiceRequest();
+		request.URLString = API_URL+"user/addScore/"+score;
 		return request;
 	}
 }
