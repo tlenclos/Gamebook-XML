@@ -9,28 +9,28 @@ import org.w3c.dom.NodeList;
 
 public class GameHistory {
 	
-	public int StoryId;
-	public List<Integer> Steps;
+	public String StoryId;
+	public List<String> Steps;
 	
 	public GameHistory()
 	{
-		Steps = new ArrayList<Integer>();
+		Steps = new ArrayList<String>();
 	}
 	
 	public GameHistory(Element gameElement)
 	{
 		this();
-		StoryId = Integer.parseInt(gameElement.getAttribute("storyId"));
+		StoryId = gameElement.getAttribute("storyId");
 
 		NodeList stepList = gameElement.getElementsByTagName("step");
 		for(int i = 0; i < stepList.getLength(); i++)
 		{
 			Element actStepElement = (Element)stepList.item(i);
-			Steps.add(Integer.parseInt(actStepElement.getAttribute("id")));
+			Steps.add(actStepElement.getAttribute("id"));
 		}
 	}
 	
-	public void AddStep(int stepId)
+	public void AddStep(String stepId)
 	{
 		Steps.add(stepId);
 	}
@@ -41,7 +41,7 @@ public class GameHistory {
 		
 		builder.append("<gameHistory storyId=\"" + StoryId + "\">");
 		
-		for(Integer actStep : Steps)
+		for(String actStep : Steps)
 			builder.append("<step id=\"" + actStep + "\"/>");
 		
 		builder.append("</gameHistory>");

@@ -13,7 +13,9 @@ import javax.swing.JTextArea;
 
 import Controllers.StoryGame;
 import Model.Choice;
+import Model.GameHistory;
 import Model.Step;
+import User.User;
 
 public class StoryGameView extends MainView implements ActionListener
 {
@@ -27,17 +29,18 @@ public class StoryGameView extends MainView implements ActionListener
 	JScrollPane radioButtonScrollPane;
 	StoryGame storyGame;
 	
+	
 	public StoryGameView(final StoryGame storyGame)
 	{
 		this.storyGame = storyGame;
 		
+
 		description = new JTextArea("");	
 		question = new JTextArea("");
 		description.setEditable(false);
 		question.setEditable(false);
 		
 		super.setupView("Story : " + storyGame.story.title);		
-		
 	}
 	
 	public void loadStep(Step step)
@@ -82,6 +85,6 @@ public class StoryGameView extends MainView implements ActionListener
 	public void actionPerformed(ActionEvent e)
 	{
 		String id = e.getActionCommand();
-		storyGame.loadStepWithId(id);
+		storyGame.loadStepWithId(id,true);
 	}
 }

@@ -12,7 +12,7 @@ public class WebServiceRequest
 	public static WebServiceRequest AuthenticationRequestForUser(User user)
 	{
 		WebServiceRequest request = new WebServiceRequest();
-		request.URLString = API_URL+"user/login/"+user.username+"/"+user.password;
+		request.URLString = API_URL+"user/login/"+user.Username+"/"+user.Password;
 		return request;
 	}
 	

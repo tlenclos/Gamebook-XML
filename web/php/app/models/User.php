@@ -8,6 +8,7 @@ class User {
     public $password = "";
     public $firstname = "";
     public $lastname = "";
+    public $score = "0";
     public $stories = array();
 
     public function mapToArray(array $data) {
@@ -39,7 +40,7 @@ class User {
     public static function stopRequestIfUserIsNotConnected() {
         if (!self::isLogged()) {
             echo json_encode(array(
-                'succcess' => false,
+                'success' => false,
                 'message' => 'You must be logged to access this resource'
             ));
             exit;

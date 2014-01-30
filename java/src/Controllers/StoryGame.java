@@ -1,28 +1,57 @@
 package Controllers;
 
+import Model.GameHistory;
+import Model.History;
 import Model.Step;
 import Model.Story;
+import User.User;
 import Views.StoryGameView;
 
 public class StoryGame
 {
 	public Story story;
 	StoryGameView storyGameView;
+	GameHistory gameHistory;
 	
 	public StoryGame(Story story)
 	{
 		this.story = story;
 		
+		gameHistory = User.getCurrentUser().UserHistory.FindGameByStoryId(story.id);
+		
+		
 		storyGameView = new StoryGameView(this);
-		storyGameView.loadStep(story.steps.get(0));
+		
+		if (gameHistory == null)
+		{
+			gameHistory = new GameHistory();
+			gameHistory.StoryId = story.id;
+			Step firstStep = story.steps.get(0);
+			gameHistory.AddStep(firstStep.id + "");
+			storyGameView.loadStep(firstStep);
+			
+			User.getCurrentUser().UserHistory.AddGame(gameHistory);
+		}
+		else
+		{
+			String lastStepId = gameHistory.Steps.get(gameHistory.Steps.size() - 1);
+			loadStepWithId(lastStepId,false);
+		}
+		
+		
 		storyGameView.setVisible(true);
 	}
 	
-	public void loadStepWithId(String id)
+	public void loadStepWithId(String id,boolean newStep)
 	{
 		Step step = story.getStepWithId(Integer.parseInt(id));
 		if( step != null )
 		{
+			if (newStep != false)
+			{
+				gameHistory.AddStep(step.id + "");
+				History.saveHistory(User.getCurrentUser().UserHistory);
+			}
 			//need to find a way to refresh view only
 			storyGameView.close();
 			storyGameView = new StoryGameView(this);

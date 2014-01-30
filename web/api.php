@@ -86,6 +86,26 @@ $app->get('/user/register/:login/:password/:firstname/:lastname/', function ($lo
     $app->render(200, $response);
 });
 
+$app->get('/user/setScore/:score/', function ($score) use ($app) {
+    
+    $userLogin = $_SESSION['user'];
+    $success = false;
+    if( isset( $userLogin ))
+    {
+        $user = Users::getUserWithLogin(FILE_USER,$userLogin);
+        if($user != false)
+        {
+            Users::update(FILE_USER,$userLogin,array("score" => $score));
+            $success = true;
+        }
+    }
+     
+    $response = array(
+        'success' => $success,
+    );
+    $app->render(200, $response);
+});
+
 $app->get('/delete/:login/', function ($login) use ($app) {
     User::stopRequestIfUserIsNotConnected();
 
