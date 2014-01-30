@@ -6,7 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Model.Game;
 import Model.Story;
+import Views.GameManagementView;
 import Views.StoriesListView;
 import WebService.WebServiceConnection;
 import WebService.WebServiceConnection.WebServiceConnectionDelegate;
@@ -78,7 +80,9 @@ public class StoriesList implements WebServiceConnectionDelegate
 	
 	public void onSelectStory(Story story)
 	{
+		Game.getInstance().start();
 		new StoryGame(story);
+		new GameManagementView();
 		listView.close();
 	}
 }
