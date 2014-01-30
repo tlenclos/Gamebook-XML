@@ -8,6 +8,7 @@ import Model.History;
 import Model.Step;
 import Model.Story;
 import User.User;
+import Views.GameManagementView;
 import Views.StoryGameView;
 import WebService.WebServiceConnection;
 import WebService.WebServiceConnection.WebServiceConnectionDelegate;
@@ -28,6 +29,14 @@ public class StoryGame implements WebServiceConnectionDelegate
 		
 		storyGameView = new StoryGameView(this);
 		
+		if (story.steps.size() == 0)
+		{
+			storyGameView.showMessageDialog("No steps in story !");
+			close();
+			GameManagementView.closeInstance();
+			return;
+		}
+		
 		if (gameHistory == null)
 		{
 			loadFirstStep();
@@ -44,11 +53,18 @@ public class StoryGame implements WebServiceConnectionDelegate
 	
 	public void loadFirstStep()
 	{
-		gameHistory = new GameHistory();
-		gameHistory.StoryId = story.id;
-		User.getCurrentUser().UserHistory.AddGame(gameHistory);
-		Step firstStep = story.steps.get(0);
-		loadStepWithId(firstStep.id + "",true);
+		try
+		{
+			gameHistory = new GameHistory();
+			gameHistory.StoryId = story.id;
+			User.getCurrentUser().UserHistory.AddGame(gameHistory);
+			Step firstStep = story.steps.get(0);
+			loadStepWithId(firstStep.id + "",true);
+		}
+		catch(Exception e)
+		{
+			storyGameView.showMessageDialog("Step not found! Please check the Gamebook's database");
+		}
 	}
 	
 	public void loadStepWithId(String id,boolean newStep)
@@ -60,6 +76,12 @@ public class StoryGame implements WebServiceConnectionDelegate
 			{
 				gameHistory.AddStep(step.id + "");
 				History.saveHistory(User.getCurrentUser().UserHistory);
+				
+				if(step.choices.size() == 0)
+				{
+					WebServiceRequest request =  WebServiceRequest.ScoreAddRequest(1);
+					webServiceConnection = new WebServiceConnection(request, this);
+				}
 			}
 			//need to find a way to refresh view only
 			if (storyGameView != null)
@@ -68,11 +90,7 @@ public class StoryGame implements WebServiceConnectionDelegate
 			storyGameView.loadStep(step);
 			storyGameView.setVisible(true);
 			
-			if(step.choices.size() == 0)
-			{
-				WebServiceRequest request =  WebServiceRequest.ScoreAddRequest(1);
-				webServiceConnection = new WebServiceConnection(request, this);
-			}
+			
 		}
 		else
 		{
@@ -82,7 +100,8 @@ public class StoryGame implements WebServiceConnectionDelegate
 	
 	public void close()
 	{
-		storyGameView.close();
+		if (storyGameView != null)
+			storyGameView.close();
 	}
 	
 	public void setVisible(boolean visible)

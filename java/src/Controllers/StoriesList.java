@@ -79,8 +79,7 @@ public class StoriesList implements WebServiceConnectionDelegate
 	
 	public void onSelectStory(Story story)
 	{
-		GameManagementView gameManagementView = new GameManagementView(story);
-		gameManagementView.start();
+		GameManagementView.show(story);
 		listView.close();
 	}
 }

@@ -6,10 +6,13 @@
     <UserName>test</UserName>
     <Games>
       <Model.GameHistory>
+        <StoryId></StoryId>
+        <Steps/>
+      </Model.GameHistory>
+      <Model.GameHistory>
         <StoryId>story-test</StoryId>
         <Steps>
           <string>3</string>
-          <string>2</string>
         </Steps>
       </Model.GameHistory>
     </Games>

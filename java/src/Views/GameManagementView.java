@@ -6,11 +6,36 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 
+import Controllers.StoriesList;
 import Controllers.StoryGame;
 import Model.Story;
 
 public class GameManagementView extends MainView  implements ActionListener
 {
+	private static GameManagementView _Instance = null;
+	public static void show(Story story) 
+	{
+		if (_Instance == null)
+		{
+			_Instance= new GameManagementView(story);
+		}
+		else
+		{
+			_Instance.story = story;
+			_Instance.storyGame = null;
+		}
+	
+		_Instance.start();
+	}
+	public static void closeInstance()
+	{
+		if (_Instance == null)
+			return;
+		
+		_Instance.stop();
+	}
+	
+	
 	private static final long serialVersionUID = 1L;
 	
 	JButton startButton;
@@ -22,9 +47,7 @@ public class GameManagementView extends MainView  implements ActionListener
 	Story story;
 	StoryGame storyGame;
 	
-	boolean isPaused = false;
-	
-	public GameManagementView(Story story)
+	private GameManagementView(Story story)
 	{
 		this.story = story;
 		
@@ -101,7 +124,6 @@ public class GameManagementView extends MainView  implements ActionListener
 		if(storyGame == null)
 			storyGame = new StoryGame(story);
 		
-		isPaused = false;
 		
 		startButton.setVisible(false);
 		stopButton.setVisible(true);
@@ -113,7 +135,6 @@ public class GameManagementView extends MainView  implements ActionListener
 	public void restart()
 	{
 		storyGame.loadFirstStep();
-		isPaused = false;
 		startButton.setVisible(false);
 		stopButton.setVisible(true);
 		resumeButton.setVisible(false);
@@ -127,18 +148,17 @@ public class GameManagementView extends MainView  implements ActionListener
 		{
 			storyGame.close();
 			storyGame = null;
+			story = null;
 		}
 		
-		startButton.setVisible(true);
-		stopButton.setVisible(false);
-		resumeButton.setVisible(false);
-		pauseButton.setVisible(false);
-		restartButton.setVisible(false);
+		this.close();
+		_Instance = null;
+		
+		new StoriesList();
 	}
 	
 	public void resume()
 	{
-		isPaused = false;
 		storyGame.setVisible(true);
 		startButton.setVisible(false);
 		stopButton.setVisible(true);
@@ -150,7 +170,6 @@ public class GameManagementView extends MainView  implements ActionListener
 
 	public void pause()
 	{
-		isPaused = true;
 		storyGame.setVisible(false);
 		startButton.setVisible(false);
 		stopButton.setVisible(false);
