@@ -51,6 +51,7 @@ class Users {
         $newUser->password = $password;
         $newUser->firstname = $firstname;
         $newUser->lastname = $lastname;
+        $newUser->score = "0";
 
         $users[] = $newUser;
 
@@ -101,7 +102,8 @@ class Users {
             $userClass->password = $userXML->password->__toString();
             $userClass->firstname = $userXML->firstname->__toString();
             $userClass->lastname = $userXML->lastname->__toString();
-            $userClass->stories = $userXML->stories->children();
+            $userClass->score = $userXML->score->__toString();
+            $userClass->stories = $userXML->stories->children();            
 
             $users[] = $userClass;
         }
@@ -118,6 +120,7 @@ class Users {
             $userXML->addChild('password', $user->password);
             $userXML->addChild('firstname', $user->firstname);
             $userXML->addChild('lastname', $user->lastname);
+            $userXML->addChild('score', $user->score);
             $storiesXML = $userXML->addChild("stories");
 
             foreach ($user->stories as $storyId) {

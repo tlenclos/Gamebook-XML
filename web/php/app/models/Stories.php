@@ -94,6 +94,7 @@ class Stories {
         $xml = new \SimpleXMLElement("<game></game>");
         $xml->addAttribute('title', $story->title);
         $xml->addAttribute('lang', $story->lang);
+        $xml->addAttribute('id', $story->id);
         $steps = $xml->addChild('steps');
 
         foreach ($story->steps as $storyStep) {
