@@ -24,6 +24,7 @@ public class Game
 	
 	protected Game()
 	{
+		
 	}
 	   
 	public static Game getInstance()
