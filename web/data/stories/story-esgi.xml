@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<game title="L'ESGI" lang="en" id="story-esgi">
+	<steps>
+		<step>
+			<id>0</id>
+			<description>Vous arrivez a l'école. Il est 8h du matin et vous avez froid. Vous êtes presque en retard.</description>
+			<question>Que faites-vous ?</question>
+			<actions>
+				<choice gotostep="1">Vous buvez un café/fumez une cigarette</choice>
+				<choice gotostep="2">Vous allez directement en cours</choice>
+			</actions>
+		</step>
+		<step>
+			<id>1</id>
+			<description>Maintenant, vous êtes définitivement en retard. Le prof vous demande pourquoi vous êtes en retard.</description>
+			<question>Que lui répondez-vous ?</question>
+			<actions>
+				<choice gotostep="2">Que vous êtes désolé et que ça ne se reproduira plus</choice>
+				<choice gotostep="3">Que vous vous êtes fait attaquer par un ours</choice>
+				<choice gotostep="3">Que vous pouvez finir votre nuit dans le couloir</choice>
+			</actions>
+		</step>
+		<step>
+			<id>2</id>
+			<description>Le cours se déroule normalement, mais il est terriblement ennuyant.</description>
+			<question>Que faites-vous ?</question>
+			<actions>
+				<choice gotostep="3">Vous vous endormez</choice>
+				<choice gotostep="4">Vous suivez avec toute votre attention</choice>
+			</actions>
+		</step>
+		<step>
+			<id>3</id>
+			<description>Vous finissez le cours dans le couloir. Arrivent bientot les partiels</description>
+			<question>Que faites-vous ?</question>
+			<actions>
+				<choice gotostep="4">Vous révisez avec MyGES</choice>
+				<choice gotostep="5">Vous ne révisez pas</choice>
+			</actions>
+		</step>
+		<step>
+			<id>4</id>
+			<description>Vous êtes en partiels.</description>
+			<question>Les réussissez-vous ?</question>
+			<actions>
+				<choice gotostep="6">Oui</choice>
+			</actions>
+		</step>
+		<step>
+			<id>5</id>
+			<description>Vous êtes en partiels.</description>
+			<question>Les réussissez-vous ?</question>
+			<actions>
+				<choice gotostep="7">Non</choice>
+				<choice gotostep="7">Vous pensez, mais non</choice>
+				<choice gotostep="7">Vous rentrez chez vous</choice>
+			</actions>
+		</step>
+		<step>
+			<id>6</id>
+			<description>Vous avez réussi vos partiels</description>
+			<question>Bravo !</question>
+			<actions/>
+		</step>
+		<step>
+			<id>7</id>
+			<description>Vous avez raté vos partiels.</description>
+			<question>Que faites-vous ?</question>
+			<actions>
+				<choice gotostep="1">Vous redoublez</choice>
+				<choice gotostep="6">Vous sortez un chèque pour avoir votre diplome</choice>
+			</actions>
+		</step>
+	</steps>
+</game>
