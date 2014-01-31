@@ -30,7 +30,7 @@ public class LeaderboardView extends MainView
         list.setVisibleRowCount(25);
         JScrollPane listScrollPane = new JScrollPane(list);
         
-        listScrollPane.setPreferredSize(new Dimension(225,225));
+        listScrollPane.setPreferredSize(new Dimension(200,200));
         super.putGBC(0, 0, 25, 25);
         add(listScrollPane,gbc);
 	}

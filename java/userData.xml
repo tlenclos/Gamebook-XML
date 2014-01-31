@@ -4,17 +4,6 @@
   <Score>0</Score>
   <UserHistory>
     <UserName>test</UserName>
-    <Games>
-      <Model.GameHistory>
-        <StoryId></StoryId>
-        <Steps/>
-      </Model.GameHistory>
-      <Model.GameHistory>
-        <StoryId>story-test</StoryId>
-        <Steps>
-          <string>3</string>
-        </Steps>
-      </Model.GameHistory>
-    </Games>
+    <Games/>
   </UserHistory>
 </User.User>

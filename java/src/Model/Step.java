@@ -5,8 +5,11 @@ import java.util.Iterator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import Lib.XmlHelper;
 
 public class Step
 {
@@ -43,32 +46,15 @@ public class Step
 	
 	public Step(Node stepNode)
 	{		
-		NodeList stepChildren = stepNode.getChildNodes();
-		for(int i=0;i<stepChildren.getLength();i++)
+		id = XmlHelper.getNodeValueAsInt((Element)stepNode, "id");
+		description = XmlHelper.getNodeValue((Element)stepNode, "description");
+		question = XmlHelper.getNodeValue((Element)stepNode, "question");
+		NodeList choiceList = ((Element)stepNode).getElementsByTagName("choice");
+		for(int i=0;i<choiceList.getLength();i++)
 		{
-			Node n = stepChildren.item(i);
-			if(n.getNodeName().equals("id") && n.getFirstChild() != null)
-			{
-				id = Integer.parseInt(n.getFirstChild().getNodeValue());
-			}
-			else if(n.getNodeName().equals("description"))
-			{
-				description = n.getFirstChild().getNodeValue();
-			}
-			else if(n.getNodeName().equals("question"))
-			{
-				question = n.getFirstChild().getNodeValue();
-			}
-			else if(n.getNodeName().equals("actions"))
-			{
-				NodeList choiceNodes = n.getChildNodes();
-				for(int j=0;j<choiceNodes.getLength();j++)
-				{
-					Node choiceNode = choiceNodes.item(j);
-					Choice c = new Choice(choiceNode);
-					choices.add(c);
-				}
-			}			
+			Node choiceNode = choiceList.item(i);
+			Choice c = new Choice(choiceNode);
+			choices.add(c);
 		}
 	}
 }

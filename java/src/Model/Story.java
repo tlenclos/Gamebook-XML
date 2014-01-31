@@ -46,7 +46,7 @@ public class Story
 		language = e.getAttribute("lang");
 		id = e.getAttribute("id");
 		
-		NodeList stepNodes = xmlNode.getFirstChild().getChildNodes();
+		NodeList stepNodes = e.getElementsByTagName("step");
 		for(int i=0;i<stepNodes.getLength();i++)
 		{
 			Node stepNode = stepNodes.item(i);
