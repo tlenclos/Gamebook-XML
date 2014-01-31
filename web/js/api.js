@@ -60,7 +60,7 @@ function Gamebook(db) {
         db.destroy(id).done(function(data) {
             self.emit("remove", id);
         }).fail(function(data) {
-            self.emit("remove", JSON.parse(data.responseText).msg);
+            self.emit("remove", JSON.parse(data.responseText));
         });
     };
 

@@ -42,10 +42,10 @@ String.prototype.startsWith = function(needle)
     })
     .on("remove", function(id) {
         if(typeof id === 'string') {
-            $.notifyBar({html: item, position: 'bottom'});
-        } else {
             $.notifyBar({html: 'Story deleted', position: 'bottom'});
             $("#" + id).remove();
+        } else {
+            $.notifyBar({html: id.msg, position: 'bottom'});
         }
     })
     .on("edit", function(item) {
